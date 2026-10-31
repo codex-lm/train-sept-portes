@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Train of Seven Doors</title>
+<style>
+:root{
+  --velvet0:#241636; --velvet1:#2e1c46; --velvet2:#3a2456; --panel:#33204d; --panel2:#3d2859;
+  --line:#4d3570; --gold:#d9a441; --gold2:#f0c96b; --parch:#f2e8d5; --muted:#b7a6cc;
+  --rose:#e5798b; --teal:#8fd0c6; --danger:#e5484d; --accent:#d9a441;
+  --shadow:0 10px 30px rgba(10,4,20,.55);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:radial-gradient(1200px 700px at 50% -10%, #35214f 0%, var(--velvet0) 55%, #1a0f29 100%);
+  color:var(--parch); font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+}
+#app{width:100%; max-width:920px; padding:10px 12px 18px; display:flex; flex-direction:column; gap:10px; flex:1}
+button{font-family:inherit}
+.hidden{display:none!important}
+
+/* ---------- header ---------- */
+#hdr{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap}
+#hdr .brand{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+#hdr .brand b{color:var(--gold); font-weight:normal}
+.hbtns{display:flex; gap:6px; flex-wrap:wrap}
+.hbtn{background:transparent; border:1px solid var(--line); color:var(--muted); border-radius:8px;
+  padding:5px 10px; font-size:12px; cursor:pointer; letter-spacing:.06em}
+.hbtn[aria-pressed="true"], .hbtn.on{color:var(--gold2); border-color:var(--gold); background:rgba(217,164,65,.10)}
+.hbtn:hover{color:var(--gold2)}
+
+/* ---------- generic panels ---------- */
+.panel{background:linear-gradient(180deg,var(--panel) 0%,var(--velvet1) 100%);
+  border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow)}
+.scene{position:relative; overflow:hidden; border-radius:14px 14px 0 0; border-bottom:1px solid var(--line)}
+.scene svg{display:block; width:100%; height:auto}
+.card{padding:14px 16px 16px}
+.prose{font-size:clamp(15px,2.4vw,17.5px); line-height:1.55; color:var(--parch)}
+.prose q, .prose em{color:var(--gold2); font-style:italic}
+.wagonTag{display:inline-block; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent); padding:3px 10px; border-radius:999px; margin-bottom:10px}
+
+/* ---------- buttons ---------- */
+.btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+.btn{cursor:pointer; border-radius:10px; border:1px solid var(--gold); color:#1d1229;
+  background:linear-gradient(180deg,var(--gold2),var(--gold)); padding:10px 18px; font-size:15px;
+  letter-spacing:.03em; box-shadow:0 4px 14px rgba(217,164,65,.25)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent; color:var(--gold2); box-shadow:none; border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--gold)}
+.btn.big{font-size:17px; padding:13px 26px; min-width:210px}
+.btn:disabled{opacity:.45; cursor:default; box-shadow:none}
+.kchip{display:inline-block; margin-left:8px; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+  padding:2px 8px; border-radius:999px; border:1px solid currentColor}
+.choice{display:block; width:100%; text-align:left; background:rgba(61,40,89,.5); border:1px solid var(--line);
+  color:var(--parch); border-radius:12px; padding:12px 14px; margin-top:10px; cursor:pointer}
+.choice:hover{border-color:var(--gold); background:rgba(217,164,65,.08)}
+.choice .cl{font-size:16px; color:var(--gold2)}
+.choice .ch{font-size:13px; color:var(--muted); margin-top:3px; line-height:1.4}
+.choice .kchip{float:right; margin-left:10px}
+
+/* ---------- gains ---------- */
+.gains{list-style:none; margin:10px 0 0; padding:0}
+.gains li{padding:6px 10px; margin:6px 0; background:rgba(217,164,65,.08); border:1px solid rgba(217,164,65,.35);
+  border-radius:8px; color:var(--gold2); font-size:15px}
+.gains li.cost{background:rgba(229,72,77,.08); border-color:rgba(229,72,77,.4); color:#f0a3a6}
+
+/* ---------- door ---------- */
+.doorwrap{display:flex; flex-direction:column; align-items:center; padding:26px 14px 30px; text-align:center}
+.doorNum{font-size:clamp(30px,7vw,46px); letter-spacing:.3em; color:var(--gold2); text-transform:uppercase}
+.doorSub{color:var(--muted); margin:8px 0 4px; font-size:15px}
+.doorOrn{margin:10px 0 4px; width:min(320px,80%)}
+
+/* ---------- combat ---------- */
+#combat{display:flex; flex-direction:column; gap:10px}
+.enemyrow{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:12px 8px 6px}
+.foe{position:relative; width:150px; background:linear-gradient(180deg,rgba(61,40,89,.65),rgba(36,22,54,.65));
+  border:1px solid var(--line); border-radius:12px; padding:8px 8px 10px; text-align:center; cursor:pointer}
+.foe.target{border-color:var(--gold); box-shadow:0 0 0 1px var(--gold), 0 0 18px rgba(217,164,65,.25)}
+.foe.dead{opacity:.28; filter:grayscale(.8); pointer-events:none}
+.foe .fname{font-size:12.5px; color:var(--parch); line-height:1.2; min-height:30px; display:flex; align-items:center; justify-content:center}
+.foe svg{width:86px; height:86px; display:block; margin:2px auto}
+.hpbar{height:9px; background:#1c1128; border-radius:6px; overflow:hidden; border:1px solid #1a1024; margin-top:4px}
+.hpbar i{display:block; height:100%; background:linear-gradient(90deg,#e5484d,#e5798b); transition:width .35s ease}
+.intent{margin-top:7px; font-size:12px; color:var(--gold2); border:1px dashed rgba(217,164,65,.5);
+  border-radius:8px; padding:4px 6px; line-height:1.35}
+.intent.chg{color:#f2b8c6; border-color:rgba(229,72,77,.6)}
+.intent.blk{color:var(--teal); border-color:rgba(143,208,198,.5)}
+.intent .iv{font-weight:bold}
+.eblock{position:absolute; top:6px; right:6px; font-size:11px; color:var(--teal); border:1px solid var(--teal);
+  border-radius:6px; padding:1px 5px; background:rgba(20,12,30,.7)}
+
+.you{display:flex; gap:12px; align-items:center; padding:10px 14px; flex-wrap:wrap}
+.you .port{width:74px; height:74px; flex:0 0 auto}
+.bars{flex:1; min-width:200px; display:flex; flex-direction:column; gap:6px}
+.statline{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted)}
+.statline .lbl{width:52px; letter-spacing:.08em; text-transform:uppercase; font-size:10.5px}
+.bar{flex:1; height:12px; background:#1c1128; border-radius:7px; overflow:hidden; border:1px solid #1a1024}
+.bar i{display:block; height:100%; transition:width .35s ease}
+.bar.hp i{background:linear-gradient(90deg,#c2455a,#e5798b)}
+.bar.en i{background:linear-gradient(90deg,#4f9d92,#8fd0c6)}
+.statline .val{width:64px; text-align:right; color:var(--parch); font-size:12.5px}
+.shieldchip{color:var(--teal); border:1px solid var(--teal); border-radius:8px; padding:1px 7px; font-size:12px}
+.pips{display:flex; gap:3px; align-items:center}
+.pip{width:9px; height:9px; border-radius:50%; border:1px solid var(--teal); opacity:.35}
+.pip.on{background:var(--teal); opacity:1}
+.pip.next{box-shadow:0 0 0 2px rgba(217,164,65,.35)}
+.starpips{display:inline-flex; gap:3px; margin-left:6px}
+.starpips i{width:7px; height:7px; border-radius:50%; border:1px solid var(--gold); opacity:.3; font-style:normal}
+.starpips i.on{background:var(--gold); opacity:1}
+
+#invbar{display:flex; gap:6px; flex-wrap:wrap; padding:8px 14px; align-items:center}
+#invbar .ilbl{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-right:2px}
+.item{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); background:rgba(36,22,54,.6);
+  color:var(--parch); border-radius:9px; padding:4px 8px; font-size:12.5px}
+.item.use{cursor:pointer}
+.item.use:hover{border-color:var(--gold)}
+.item .n{color:var(--gold2)}
+.item.pas{border-style:dashed; color:var(--muted)}
+
+#actions{display:flex; gap:8px; flex-wrap:wrap; padding:4px 14px 14px}
+.abtn{flex:1; min-width:120px; cursor:pointer; border-radius:10px; padding:10px 8px; font-size:14.5px;
+  border:1px solid var(--gold); color:#1d1229; background:linear-gradient(180deg,var(--gold2),var(--gold))}
+.abtn small{display:block; font-size:10.5px; letter-spacing:.04em; opacity:.75; margin-top:2px}
+.abtn.alt{background:transparent; color:var(--gold2)}
+.abtn:disabled{opacity:.4; cursor:default}
+.abtn:active{transform:translateY(1px)}
+
+#log{margin:0 14px 12px; padding:8px 10px; background:rgba(20,12,30,.55); border:1px solid var(--line);
+  border-radius:10px; font-size:13px; color:var(--muted); line-height:1.5; min-height:44px}
+#log b{color:var(--parch); font-weight:normal}
+#log .lg-star, #log .lg-good{color:var(--gold2)}
+#log .lg-bad{color:#f0a3a6}
+
+/* ---------- ending / gameover ---------- */
+.endwrap{text-align:center; padding:24px 16px 28px}
+.endtitle{font-size:clamp(24px,5.4vw,34px); color:var(--gold2); letter-spacing:.06em; margin:6px 0 14px}
+.endcols{max-width:640px; margin:0 auto; text-align:left}
+.stats{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:16px 0 6px}
+.stat{border:1px solid var(--line); border-radius:10px; padding:6px 12px; font-size:12.5px; color:var(--muted)}
+.stat b{color:var(--parch); font-weight:normal}
+
+/* ---------- title ---------- */
+#title{display:flex; flex-direction:column; align-items:center; text-align:center; padding:16px 14px 24px}
+.gtitle{font-size:clamp(26px,6.4vw,44px); color:var(--gold2); letter-spacing:.04em; margin:10px 0 2px; line-height:1.12}
+.gsub{color:var(--muted); font-style:italic; margin-bottom:14px; font-size:clamp(14px,2.6vw,16px)}
+.endstars{display:flex; gap:10px; margin:10px 0 2px; font-size:12.5px; color:var(--muted)}
+.endstars span{border:1px solid var(--line); border-radius:999px; padding:3px 10px}
+.endstars span.got{color:var(--gold2); border-color:var(--gold)}
+.credit{margin-top:18px; font-size:11.5px; color:var(--muted); letter-spacing:.04em}
+.credit a{color:var(--muted)}
+
+/* ---------- howto ---------- */
+#howto{position:fixed; inset:0; background:rgba(14,7,24,.82); display:flex; align-items:center; justify-content:center; z-index:50; padding:16px}
+#howto .panel{max-width:560px; max-height:86vh; overflow:auto; border-radius:14px}
+#howto ol{margin:8px 0 0; padding-left:20px; line-height:1.55; font-size:14.5px}
+#howto li{margin:7px 0}
+
+/* ---------- fx ---------- */
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.shake{animation:shake .38s ease}
+@keyframes hitflash{0%{filter:brightness(2.4) saturate(.4)}100%{filter:none}}
+.hitflash{animation:hitflash .4s ease}
+@keyframes floatup{0%{opacity:0; transform:translateY(6px)}25%{opacity:1}100%{opacity:0; transform:translateY(-26px)}}
+.dmgfloat{position:absolute; left:50%; top:8px; transform:translateX(-50%); font-size:19px; color:#f0c96b;
+  text-shadow:0 2px 6px rgba(0,0,0,.6); animation:floatup 1s ease forwards; pointer-events:none; z-index:5}
+.dmgfloat.bad{color:#f2a0ab}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,164,65,.0)}50%{box-shadow:0 0 16px 2px rgba(217,164,65,.35)}}
+.pulse{animation:pulse 2.2s ease infinite}
+@keyframes flicker{0%,100%{opacity:.85}45%{opacity:1}55%{opacity:.75}70%{opacity:.95}}
+.flicker{animation:flicker 3.4s ease infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-46px)}}
+.starsA{animation:drift 26s linear infinite}
+.starsB{animation:drift 15s linear infinite}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+
+@media (max-width:560px){
+  .foe{width:132px}
+  .foe svg{width:70px;height:70px}
+  .abtn{min-width:104px; font-size:13.5px}
+  .card{padding:12px 12px 14px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hdr">
+    <div class="brand" id="brand"></div>
+    <div class="hbtns" id="hbtns"></div>
+  </div>
+  <div id="stage"></div>
+  <div id="howto" class="hidden"></div>
+</div>
+
+<script id="train-core">
+"use strict";
+/* =====================================================================
+   TrainCore — pure rules engine for "The Train of Seven Doors".
+   No DOM access here. The UI script drives it through the API below.
+   ===================================================================== */
+var TrainCore = (function(){
+var VERSION = "1.0.0";
+var LANGS = ["en","fr","es"];
+
+/* ---------------- i18n ---------------- */
+var EN = {
+  "ui.title":"The Train of Seven Doors",
+  "ui.tagline":"A little adventure in seven carriages.",
+  "ui.new":"New journey","ui.continue":"Continue","ui.rules":"How to play",
+  "ui.sound":"Sound","ui.lang":"Language","ui.next":"Continue","ui.ok":"Take it",
+  "ui.open":"Open the door","ui.retry":"Try this wagon again","ui.abandon":"Back to the platform",
+  "ui.hp":"Health","ui.energy":"Energy","ui.shield":"Shield {v}","ui.inventory":"Bag",
+  "ui.empty":"(empty)","ui.aim":"tap a foe to aim","ui.victory":"The way is clear.",
+  "ui.stats":"Journey","ui.replay":"Travel again","ui.made":"Concept: Cédric Bernadac · a game made by Z Code (AI)",
+  "ui.endings":"Endings found:","ui.langName":"English",
+  "how.title":"How to play",
+  "how.1":"Cross seven carriages to reach the engine of the midnight train.",
+  "how.2":"At forks, pick your way: a fight, an encounter, or supplies.",
+  "how.3":"Fights are turn-based. Every foe shows its intention first — guard the big blows, strike the openings.",
+  "how.4":"Strike is free. Guarding raises a shield and restores 2 energy. Your Lantern Flash costs energy and hits harder.",
+  "how.5":"Some doors grant items or a choice of two upgrades. Items truly change your options.",
+  "how.6":"Two endings wait at the fire. No single item is required to win.",
+  "kind.combat":"Fight","kind.encounter":"Encounter","kind.resource":"Supplies",
+  "act.strike":"Strike","act.guard":"Guard","act.ability":"Lantern Flash","act.item":"Item",
+  "c.cost":"{v} energy","c.blocked":"glances off",
+  "i.pounce":"Pounce","i.swirl":"Swirl","i.snap":"Snap","i.chomp":"Chomp",
+  "i.check":"Ticket check","i.cap":"Cap straightened","i.stamp":"Rubber stamp","i.whistle":"Whistle",
+  "i.inspection":"Full inspection","i.shovel":"Shovel blow","i.furnace":"Furnace blast","i.hiss":"Boiler hiss",
+  "i.piston":"Piston jab","i.wsteam":"Scalding whistle","i.steam":"Full steam",
+  "intent.charge":"charging {v}","intent.block":"bracing","intent.drain":"drains {v} energy",
+  "tip.charge":"A charged blow is coming — guarding when it is shown softens it.",
+  "log.strike":"You strike {e} for <b>{v}</b>.",
+  "log.star":"The copper star flares: <b>+{v}</b>!",
+  "log.ability":"Lantern flash! {e} takes <b>{v}</b>.",
+  "log.guard":"You raise your shield.",
+  "log.eblock":"{e} blocks {v}.",
+  "log.ehit":"{e} hits you for <b>{v}</b>.",
+  "log.eblocked":"Your shield absorbs <b>{v}</b>.",
+  "log.drain":"{e} sips <b>{v}</b> of your energy.",
+  "log.charge":"{e} winds up something big…",
+  "log.cap":"{e} straightens its cap — your next hit will glance.",
+  "log.tart":"You eat the tart. Warmth, +{v} HP.",
+  "log.tea":"You gulp the tea. Sparks, +{v} energy.",
+  "log.win":"The way is clear.",
+  "log.noenergy":"Not enough energy.",
+  "it.tart.n":"Blueberry tart","it.tart.d":"Restores 12 HP. In a fight, eating takes your turn.",
+  "it.tea.n":"Scalding tea","it.tea.d":"+6 energy, best gulped mid-fight. Takes your turn.",
+  "it.ticket.n":"Punched ticket","it.ticket.d":"Inspectors respect old paper: their blows deal 4 less.",
+  "it.lantern.n":"Golden lantern","it.lantern.d":"Its glow feeds your pace: +1 energy every turn.",
+  "it.star.n":"Copper star","it.star.d":"Every third strike lands 4 harder.",
+  "it.key.n":"Locomotive key","it.key.d":"Opens the back panel: the final fight starts with the foe 8 HP shorter.",
+  "it.cannotTea":"The tea only makes sense mid-fight.",
+  "gain.hp":"You mend {v} HP.","gain.maxhp":"+{v} max HP","gain.hpn":"−{v} HP (worth it)",
+  "gain.maxen":"+{v} max energy","gain.item":"{x} ×1","gain.first":"Your first blow of the final fight will land before it starts (+6).",
+  "en.wisp":"Dust wisp","en.trunk":"Ravenous trunk","en.conductor":"Faceless conductor",
+  "en.conductorElite":"Inspector of the Sixth Door","en.engineerP1":"The Stoker","en.engineerP2":"The Midnight Engineer",
+  "w1":"The Dormitory Car","w2":"The Dining Car","w3":"The Library Car","w4":"The Lantern Car",
+  "w5":"The Cargo Car","w6":"The Ghost Car","w7":"The Coal Tender","wf":"The Midnight Locomotive",
+  "ui.wagon":"Wagon {n} — {w}",
+  "door.of":"Door {n} of seven","door.next":"Beyond: {w}","door.creak":"You slide the door open.",
+  "s1.p1":"You wake to the click of rails. A velvet seat, a window full of stars, and no ticket in your pocket — only a folded note.",
+  "s1.p2":"It is your own handwriting: <q>Seven doors between here and the engine. Reach it. Then decide what the fire becomes.</q>",
+  "s1.pre":"Under the seats, the dust stirs. It has been waiting for someone warm.",
+  "s1.reward.q":"In the lost-property net hang two things worth taking. You have room for one.",
+  "s2.p1":"Door II. The dining car smells of cinnamon and candle smoke. Half the lamps are lit; the other half have flown away as moths.",
+  "s2.q":"Three aisles, three sounds: a racket in the kitchen, a cook humming at her pot, a glint behind the bar.",
+  "s2.kitchen.l":"The kitchen racket","s2.kitchen.h":"Fight whatever raids the pantry — a hearty prize.",
+  "s2.cook.l":"The humming cook","s2.cook.h":"Sit, eat, listen. No blades involved.",
+  "s2.bar.l":"Search the bar","s2.bar.h":"Lost shelves, found goodies. Mind the glass.",
+  "s2.kitchen.p":"Pots everywhere. In the pantry doorway, a travelling trunk gnaws through a crate of biscuits. It turns. It has teeth.",
+  "s2.kitchen.win":"The trunk yawns, subdued. You salvage a real meal, and your body remembers what warmth is for.",
+  "s2.cook1":"The cook stirs a pot of starlight soup. <q>Passenger! Sit. Eat. The Engineer never eats, poor soul.</q>",
+  "s2.cook2":"She presses a warm tart into your hands. <q>Mind the sixth door. The inspector there has no face, only duties.</q>",
+  "s2.bar.p":"Behind the bar, glasses shelved by colour. A bottle rolls off; you catch it — too late, a shard bites your hand. But look: two forgotten goodies.",
+  "s3.p1":"Door III. The library car. Books float a finger above their shelves, breathing. A green lamp burns over the manifest desk.",
+  "s3.q":"You hear three things: a stamp clicking in the aisle, a soft voice reading names, and — behind a rope — a shelf that hums like a beehive.",
+  "s3.aisle.l":"The clicking stamp","s3.aisle.h":"The faceless conductor is checking tickets. You have none.",
+  "s3.archivist.l":"The soft voice","s3.archivist.h":"The Archivist of Lanterns reads the passenger manifest.",
+  "s3.shelf.l":"The humming shelf","s3.shelf.h":"One golden lantern burns there without oil. The dust will not like it.",
+  "s3.aisle.p":"Cap straight, face smooth as a spoon. <q>Tickets.</q> You have none. The stamp comes down.",
+  "s3.aisle.win":"The conductor melts into ticket stubs. Something warm rolls to your feet.",
+  "s3.archivist1":"The Archivist reads the manifest of everyone the train has ever carried. <q>You are in here twice,</q> she says. <q>Once asleep. Once not yet.</q>",
+  "s3.archivist2":"She punches your blank ticket: <q>Show this to any inspector. They respect old paper.</q>",
+  "s3.shelf.p":"You lift the rope. The humming shelf holds one golden lantern, burning without oil. The moment you touch it, the dust of the car wakes — all of it.",
+  "s4.p1":"Door IV. Hundreds of small lanterns hang from the ceiling, swinging with the train. Under them, a child chases a moth with star wings.",
+  "s4.q":"The moth keeps slipping away. The child keeps almost-crying.",
+  "s4.help.l":"Lend your hands","s4.help.h":"Catch the moth with the child. Moths bite; children remember.",
+  "s4.watch.l":"Just watch","s4.watch.h":"Sit back under the lanterns and breathe for a while.",
+  "s4.help.p":"You lend your hands. The moth lands — it bites, cold as frost — but the child cups it, delighted.",
+  "s4.help.p2":"The child presses the shiniest thing they own into your hands, and pretends not to be proud of the gift.",
+  "s4.watch.p":"You sit among the little lights and just breathe, one stop's worth of quiet.",
+  "s5.p1":"Door V. The cargo car: crates, ropes, the smell of rain on iron. Somewhere in here, a purring that is far too clever.",
+  "s5.q":"Three ways on: a cat in a waistcoat holding a key, a pyramid of unopened crates, and — at the far door — heavy, patient footsteps.",
+  "s5.cat.l":"The trading cat","s5.cat.h":"<q>I only trade, never steal.</q> The key opens the locomotive's back panel.",
+  "s5.crates.l":"Open the crates","s5.crates.h":"Locks fight back. Crates forgive.",
+  "s5.patrol.l":"The night patrol","s5.patrol.h":"A ravenous trunk on a leash of dust, and its little handler.",
+  "s5.cat.p":"<q>That key opens the locomotive's back panel,</q> says the cat. <q>Make it worth my while, and never speak of it.</q>",
+  "s5.cat.tart":"Trade a blueberry tart","s5.cat.tea":"Trade the scalding tea","s5.cat.hp":"Pay 5 max health",
+  "s5.cat.tart.h":"The cat hands over the key, unimpressed by the crumbs.",
+  "s5.cat.tea.h":"The cat sniffs the cup once and pockets eternity.",
+  "s5.cat.hp.h":"The cat takes its fee in years and sleep. It is gentler than it sounds.",
+  "s5.cat.refuse":"Refuse politely","s5.cat.refuse.h":"The cat shrugs in a way that involves no shoulders.",
+  "s5.crates.p":"You lever a crate open with a spoon of solid curiosity. The lock fights back — your knuckles pay for it — but inside: paper, string, and two edible miracles.",
+  "s5.patrol.p":"At the far end, the patrol waits for you: a trunk straining at its leash of dust, and the small wisp that holds it.",
+  "s5.patrol.win":"The leash scatters into nothing. In the dust, something copper glints.",
+  "s6.p1":"Door VI. The ghost car. Passengers the colour of moonlight nod at you, politely, from seats they no longer dent. At the far end, under a silver cap, waits the Inspector of the Sixth Door.",
+  "s6.win":"The inspector folds into a single ticket, punched clean through. In the crew nook, a kettle still sings; you drink something that tastes of being remembered.",
+  "s7.p1":"Door VII. The coal tender. Night wind, coal dust like slow snow. The locomotive is one door away, breathing.",
+  "s7.q":"A few minutes to yourself before the last door. Spend them how?",
+  "s7.sleep.l":"Sleep by the hatch","s7.sleep.h":"The boiler is warm. The dream is good precisely because it is empty.",
+  "s7.sharpen.l":"Sharpen your iron","s7.sharpen.h":"Whet the travelling iron until it hums. The final fight starts with the foe 6 HP shorter.",
+  "s7.sleep.p":"You sleep against the warm hatch and dream of nothing — the good nothing.",
+  "s7.sharpen.p":"You whet your iron until it hums a small tune of its own.",
+  "f.p1":"The cab is all copper and fireglow. A figure feeds the boiler with shovels of night. Its goggles reflect a furnace it never looks at.",
+  "f.p2":"<q>Every traveller reaches this door,</q> says the Midnight Engineer. <q>Fewer reach the fire still choosing. Show me which kind you are.</q>",
+  "f.phase2":"The Engineer sets down the shovel. The fire leans out of the boiler to watch. Now comes the drive itself.",
+  "f.q":"The furnace stands open. The train's fire — warm, patient, made of every lantern ever left behind on every journey — waits for your hand.",
+  "f.fire.l":"Take the fire","f.fire.h":"Become the Engineer. The train runs on, and on.",
+  "f.dawn.l":"Let it go","f.dawn.h":"Open the damper wide. Let the fire see the sky.",
+  "end.fire.t":"The Fire Is Yours",
+  "end.fire.p1":"You take the fire. It weighs nothing and everything, like a decision finally made.",
+  "end.fire.p2":"The engine sings. The seven doors close behind you — each one, now, opening onto wherever you ask.",
+  "end.fire.child":"In the last carriage, the lantern child waves. You dim the headlamp once, gently, so as not to wake the moths.",
+  "end.dawn.t":"Daybreak",
+  "end.dawn.p1":"You pull the damper wide. The fire rises through the funnel like a flock of sparks that finally remembers it can fly.",
+  "end.dawn.p2":"The train slows into a pink horizon. You step down onto a platform that smells of rain. The note in your pocket is blank now. That is fine.",
+  "end.dawn.child":"A moth with star wings settles on your shoulder just as the sun comes up.",
+  "go.t":"The Train Carries You Back",
+  "go.p":"Warm darkness, the click of rails. A voice like punched cardboard: <q>Not this door, traveller. Rest. Try the wagon again.</q>",
+  "up.q":"The door between carriages offers a gift. Choose one.",
+  "up.blade.n":"Copper blade","up.blade.d":"+2 damage on every strike.",
+  "up.breath.n":"Long breath","up.breath.d":"+4 max energy — your lantern burns longer.",
+  "up.comb.n":"Star comb","up.comb.d":"Guarding also mends 3 HP.",
+  "up.flame.n":"Keen flame","up.flame.d":"Lantern Flash costs 1 less energy and deals 2 more.",
+  "up.coat.n":"Velvet coat","up.coat.d":"+8 max HP, and mend 8 right now.",
+  "up.whistle.n":"Silver whistle","up.whistle.d":"Start every fight with +4 energy; guarding gives +1 more.",
+  "stats.combats":"fights won","stats.turns":"turns","stats.dmg":"damage dealt","stats.doors":"doors opened","stats.items":"items used"
+};
+
+var FR = {
+  "ui.title":"Le Train des sept portes",
+  "ui.tagline":"Une petite aventure en sept wagons.",
+  "ui.new":"Nouveau voyage","ui.continue":"Continuer","ui.rules":"Comment jouer",
+  "ui.sound":"Son","ui.lang":"Langue","ui.next":"Continuer","ui.ok":"Le prendre",
+  "ui.open":"Ouvrir la porte","ui.retry":"Retenter ce wagon","ui.abandon":"Retour au quai",
+  "ui.hp":"Vie","ui.energy":"Énergie","ui.shield":"Bouclier {v}","ui.inventory":"Sac",
+  "ui.empty":"(vide)","ui.aim":"touche un adversaire pour viser","ui.victory":"La voie est libre.",
+  "ui.stats":"Voyage","ui.replay":"Voyager à nouveau","ui.made":"Concept : Cédric Bernadac · un jeu réalisé par Z Code (IA)",
+  "ui.endings":"Fins trouvées :","ui.langName":"Français",
+  "how.title":"Comment jouer",
+  "how.1":"Traverse sept wagons pour rejoindre la locomotive du train de minuit.",
+  "how.2":"Aux embranchements, choisis ta voie : un combat, une rencontre ou des provisions.",
+  "how.3":"Les combats se jouent au tour par tour. Chaque adversaire annonce d'abord son intention : pare les gros coups, frappe dans les ouvertures.",
+  "how.4":"Frapper est gratuit. Se protéger lève un bouclier et rend 2 d'énergie. L'Éclair de lanterne coûte de l'énergie et frappe plus fort.",
+  "how.5":"Certaines portes offrent des objets ou le choix entre deux améliorations. Les objets changent vraiment tes options.",
+  "how.6":"Deux fins t'attendent au feu. Aucun objet précis n'est indispensable pour gagner.",
+  "kind.combat":"Combat","kind.encounter":"Rencontre","kind.resource":"Ressource",
+  "act.strike":"Frapper","act.guard":"Se protéger","act.ability":"Éclair de lanterne","act.item":"Objet",
+  "c.cost":"{v} énergie","c.blocked":"ricochète",
+  "i.pounce":"Bond","i.swirl":"Tourbillon","i.snap":"Croc","i.chomp":"Mâchonnement",
+  "i.check":"Contrôle des billets","i.cap":"Casquette rectifiée","i.stamp":"Coup de tampon","i.whistle":"Sifflet",
+  "i.inspection":"Inspection complète","i.shovel":"Coup de pelle","i.furnace":"Souffle de fournaise","i.hiss":"Sifflement de chaudière",
+  "i.piston":"Coup de piston","i.wsteam":"Sifflet brûlant","i.steam":"Vapeur pleine",
+  "intent.charge":"prépare {v}","intent.block":"se campe","intent.drain":"aspire {v} énergie",
+  "tip.charge":"Un coup chargé arrive : parer au moment où il s'affiche l'amortira.",
+  "log.strike":"Tu frappes {e} pour <b>{v}</b>.",
+  "log.star":"L'étoile de cuivre s'embrase : <b>+{v}</b> !",
+  "log.ability":"Éclair de lanterne ! {e} encaisse <b>{v}</b>.",
+  "log.guard":"Tu lèves ton bouclier.",
+  "log.eblock":"{e} bloque {v}.",
+  "log.ehit":"{e} te touche pour <b>{v}</b>.",
+  "log.eblocked":"Ton bouclier absorbe <b>{v}</b>.",
+  "log.drain":"{e} sirotes <b>{v}</b> de ton énergie.",
+  "log.charge":"{e} prépare quelque chose de gros…",
+  "log.cap":"{e} rectifie sa casquette — ton prochain coup ricochera.",
+  "log.tart":"Tu manges la tarte. Chaleur, +{v} PV.",
+  "log.tea":"Tu avales le thé. Étincelles, +{v} énergie.",
+  "log.win":"La voie est libre.",
+  "log.noenergy":"Pas assez d'énergie.",
+  "it.tart.n":"Tarte aux myrtilles","it.tart.d":"Rend 12 PV. En combat, la manger prend ton tour.",
+  "it.tea.n":"Thé brûlant","it.tea.d":"+6 énergie, à boire en plein combat. Prend ton tour.",
+  "it.ticket.n":"Billet percé","it.ticket.d":"Les contrôleurs respectent le vieux papier : leurs coups font 4 de moins.",
+  "it.lantern.n":"Lanterne dorée","it.lantern.d":"Sa lueur nourrit ton élan : +1 énergie à chaque tour.",
+  "it.star.n":"Étoile de cuivre","it.star.d":"Chaque troisième coup frappe 4 points plus fort.",
+  "it.key.n":"Clé de locomotive","it.key.d":"Ouvre le panneau arrière : le combat final commence avec 8 PV de moins pour l'ennemi.",
+  "it.cannotTea":"Le thé n'a de sens qu'en plein combat.",
+  "gain.hp":"Tu récupères {v} PV.","gain.maxhp":"+{v} PV max","gain.hpn":"−{v} PV (ça les vaut)",
+  "gain.maxen":"+{v} énergie max","gain.item":"{x} ×1","gain.first":"Ton premier coup du combat final partira avant l'ennemi (+6).",
+  "en.wisp":"Poussière-vive","en.trunk":"Malle vorace","en.conductor":"Contrôleur sans visage",
+  "en.conductorElite":"Inspecteur de la sixième porte","en.engineerP1":"Le Chauffeur","en.engineerP2":"Le Mécanicien de minuit",
+  "w1":"Le wagon dortoir","w2":"Le wagon restaurant","w3":"Le wagon bibliothèque","w4":"Le wagon aux lanternes",
+  "w5":"Le wagon de marchandises","w6":"La voiture fantôme","w7":"Le tender à charbon","wf":"La locomotive de minuit",
+  "ui.wagon":"Wagon {n} — {w}",
+  "door.of":"Porte {n} sur sept","door.next":"Au-delà : {w}","door.creak":"Tu fais coulisser la porte.",
+  "s1.p1":"Tu te réveilles au cliquetis des rails. Un siège de velours, une fenêtre pleine d'étoiles, et aucun billet en poche — seulement un mot plié.",
+  "s1.p2":"C'est ta propre écriture : <q>Sept portes te séparent de la locomotive. Rejoins-la. Puis décide de ce que deviendra le feu.</q>",
+  "s1.pre":"Sous les sièges, la poussière s'agite. Elle attendait quelqu'un de chaud.",
+  "s1.reward.q":"Dans le filet des objets perdus pendent deux choses qui valent la peine. Tu n'as de place que pour une.",
+  "s2.p1":"Porte II. Le wagon restaurant sent la cannelle et la fumée de bougie. La moitié des lampes sont allumées ; les autres se sont envolées, devenues papillons de nuit.",
+  "s2.q":"Trois allées, trois bruits : un vacarme dans la cuisine, une cuisinière qui fredonne devant sa marmite, un éclat derrière le bar.",
+  "s2.kitchen.l":"Le vacarme de la cuisine","s2.kitchen.h":"Affronte ce qui pille le garde-manger — un beau butin.",
+  "s2.cook.l":"La cuisinière qui fredonne","s2.cook.h":"S'asseoir, manger, écouter. Aucune lame en jeu.",
+  "s2.bar.l":"Fouiller le bar","s2.bar.h":"Étagères perdues, provisions trouvées. Gare au verre.",
+  "s2.kitchen.p":"Des casseroles partout. Dans l'encadrement du garde-manger, une malle de voyage déchiquette une caisse de biscuits. Elle se retourne. Elle a des dents.",
+  "s2.kitchen.win":"La malle bâille, domptée. Tu sauves un vrai repas, et ton corps se souvient à quoi sert la chaleur.",
+  "s2.cook1":"La cuisinière touille une soupe de lumière d'étoiles. <q>Voyageur ! Assieds-toi. Mange. Le Mécanicien ne mange jamais, le pauvre.</q>",
+  "s2.cook2":"Elle te presse une tarte chaude dans les mains. <q>Méfie-toi de la sixième porte. L'inspecteur, là-bas, n'a pas de visage, seulement des devoirs.</q>",
+  "s2.bar.p":"Derrière le bar, des verres rangés par couleur. Une bouteille roule ; tu la rattrapes — trop tard, un tesson te mord la main. Mais regarde : deux provisions oubliées.",
+  "s3.p1":"Porte III. Le wagon bibliothèque. Les livres flottent un doigt au-dessus de leurs étagères, en train de respirer. Une lampe verte brûle au bureau du manifeste.",
+  "s3.q":"Tu entends trois choses : un tampon qui claque dans l'allée, une voix douce qui lit des noms, et — derrière une corde — une étagère qui ronronne comme une ruche.",
+  "s3.aisle.l":"Le tampon qui claque","s3.aisle.h":"Le contrôleur sans visage contrôle les billets. Tu n'en as pas.",
+  "s3.archivist.l":"La voix douce","s3.archivist.h":"L'Archiviste des Lanternes lit le manifeste des passagers.",
+  "s3.shelf.l":"L'étagère qui ronronne","s3.shelf.h":"Une lanterne dorée y brûle sans huile. La poussière n'aimera pas.",
+  "s3.aisle.p":"Casquette droite, visage lisse comme une cuillère. <q>Les billets.</q> Tu n'en as pas. Le tampon descend.",
+  "s3.aisle.win":"Le contrôleur fond en coupons de billets. Quelque chose de tiède roule à tes pieds.",
+  "s3.archivist1":"L'Archiviste lit le manifeste de tous ceux que le train a portés. <q>Tu y figure deux fois,</q> dit-elle. <q>Une fois endormi. Une fois pas encore.</q>",
+  "s3.archivist2":"Elle perfore ton billet vierge : <q>Montre ceci à n'importe quel contrôleur. Ils respectent le vieux papier.</q>",
+  "s3.shelf.p":"Tu soulèves la corde. Sur l'étagère qui ronronne, une lanterne dorée brûle sans huile. À l'instant où tu la touches, la poussière du wagon s'éveille — toute la poussière.",
+  "s4.p1":"Porte IV. Des centaines de petites lanternes pendent au plafond, se balançant avec le train. Dessous, un enfant poursuit un papillon aux ailes d'étoiles.",
+  "s4.q":"Le papillon lui échappe sans cesse. L'enfant est toujours à deux doigts de pleurer.",
+  "s4.help.l":"Prêter tes mains","s4.help.h":"Attraper le papillon avec l'enfant. Les papillons mordent ; les enfants se souviennent.",
+  "s4.watch.l":"Juste regarder","s4.watch.h":"S'asseoir sous les lanternes et respirer un moment.",
+  "s4.help.p":"Tu prêtes tes mains. Le papillon se pose — il mord, froid comme le givre — mais l'enfant le cueille dans ses paumes, émerveillé.",
+  "s4.help.p2":"L'enfant presse dans tes mains la chose la plus brillante qu'il possède, et fait semblant de n'être pas fier du cadeau.",
+  "s4.watch.p":"Tu t'assois parmi les petites lueurs et tu respires, une gare durant, un calme entier.",
+  "s5.p1":"Porte V. Le wagon de marchandises : des caisses, des cordes, une odeur de pluie sur le fer. Quelque part ici, un ronronnement beaucoup trop malin.",
+  "s5.q":"Trois voies : un chat en gilet qui tient une clé, une pyramide de caisses fermées, et — à la porte du fond — des pas lourds et patients.",
+  "s5.cat.l":"Le chat marchand","s5.cat.h":"<q>Je n'échange que, je ne vole jamais.</q> La clé ouvre le panneau arrière de la locomotive.",
+  "s5.crates.l":"Ouvrir les caisses","s5.crates.h":"Les serrures ripostent. Les caisses pardonnent.",
+  "s5.patrol.l":"La patrouille de nuit","s5.patrol.h":"Une malle vorace en laisse de poussière, et son petit maître.",
+  "s5.cat.p":"<q>Cette clé ouvre le panneau arrière de la locomotive,</q> dit le chat. <q>Rends-la intéressante pour moi, et n'en parle jamais.</q>",
+  "s5.cat.tart":"Échanger une tarte aux myrtilles","s5.cat.tea":"Échanger le thé brûlant","s5.cat.hp":"Payer 5 PV max",
+  "s5.cat.tart.h":"Le chat te remet la clé, sans être impressionné par les miettes.",
+  "s5.cat.tea.h":"Le chat hume la tasse une fois et met l'éternité en poche.",
+  "s5.cat.hp.h":"Le chat prend ses honoraires en années et en sommeil. C'est plus doux que ça n'en a l'air.",
+  "s5.cat.refuse":"Refuser poliment","s5.cat.refuse.h":"Le chat hausse les épaules d'une manière qui n'implique aucune épaule.",
+  "s5.crates.p":"Tu forces une caisse avec une cuillère de curiosité solide. La serrure riposte — tes phalanges y passent — mais dedans : du papier, de la ficelle, et deux miracles comestibles.",
+  "s5.patrol.p":"Au fond, la patrouille t'attend : une malle qui tire sur sa laisse de poussière, et la petite poussière-vive qui la tient.",
+  "s5.patrol.win":"La laisse se disperse en rien. Dans la poussière, quelque chose de cuivré brille.",
+  "s6.p1":"Porte VI. La voiture fantôme. Des passagers couleur clair de lune te saluent poliment depuis des sièges qu'ils n'enfoncent plus. Au fond, sous une casquette d'argent, t'attend l'Inspecteur de la sixième porte.",
+  "s6.win":"L'inspecteur se plie en un seul billet, perforé net. Dans le réduit de l'équipage, une bouilloire chante encore ; tu bois quelque chose qui a le goût d'être souvenir.",
+  "s7.p1":"Porte VII. Le tender à charbon. Vent de nuit, poussière de charbon comme une neige lente. La locomotive est à une porte, elle respire.",
+  "s7.q":"Quelques minutes à toi avant la dernière porte. Comment les employer ?",
+  "s7.sleep.l":"Dormir contre la trappe","s7.sleep.h":"La chaudière est chaude. Le rêve est bon précisément parce qu'il est vide.",
+  "s7.sharpen.l":"Aiguiser ton fer","s7.sharpen.h":"Passer le fer voyageur à la pierre jusqu'à ce qu'il chante. Le combat final commencera avec 6 PV de moins pour l'ennemi.",
+  "s7.sleep.p":"Tu dors contre la trappe chaude et tu rêves de rien — le bon rien.",
+  "s7.sharpen.p":"Tu aiguises ton fer jusqu'à ce qu'il fredonne une petite chanson à lui.",
+  "f.p1":"La cabine est toute de cuivre et de feu. Une silhouette nourrit la chaudière à pelles de nuit. Ses lunettes réfléchissent une fournaise qu'elle ne regarde jamais.",
+  "f.p2":"<q>Tout voyageur atteint cette porte,</q> dit le Mécanicien de minuit. <q>Moins nombreux sont ceux qui atteignent le feu en choisissant encore. Montre-moi de quelle espèce tu es.</q>",
+  "f.phase2":"Le Mécanicien repose la pelle. Le feu se penche hors de la chaudière pour regarder. Voici maintenant la conduite elle-même.",
+  "f.q":"Le foyer est grand ouvert. Le feu du train — chaud, patient, fait de toutes les lanternes abandonnées sur tous les voyages — attend ta main.",
+  "f.fire.l":"Saisir le feu","f.fire.h":"Devenir le Mécanicien. Le train roule, et roule encore.",
+  "f.dawn.l":"Le laisser partir","f.dawn.h":"Ouvrir en grand le registre. Laisser le feu voir le ciel.",
+  "end.fire.t":"Le feu est à toi",
+  "end.fire.p1":"Tu prends le feu. Il ne pèse rien et tout à la fois, comme une décision enfin prise.",
+  "end.fire.p2":"La locomotive chante. Les sept portes se referment derrière toi — et chacune, désormais, s'ouvre là où tu le demandes.",
+  "end.fire.child":"Dans le dernier wagon, l'enfant-lanterne fait un signe. Tu voiles une fois le phare, doucement, pour ne pas réveiller les papillons.",
+  "end.dawn.t":"L'aube",
+  "end.dawn.p1":"Tu tires le registre en grand. Le feu monte par la cheminée comme une nuée d'étincelles qui se souvient enfin qu'elle peut voler.",
+  "end.dawn.p2":"Le train ralentit dans un horizon rose. Tu descends sur un quai qui sent la pluie. Le mot dans ta poche est vierge, à présent. C'est très bien ainsi.",
+  "end.dawn.child":"Un papillon aux ailes d'étoiles se pose sur ton épaule, juste au moment où le soleil se lève.",
+  "go.t":"Le train te ramène",
+  "go.p":"Chaleur obscure, cliquetis des rails. Une voix comme du carton perforé : <q>Pas cette porte, voyageur. Repose-toi. Retente le wagon.</q>",
+  "up.q":"La porte entre deux wagons offre un présent. Choisis-en un.",
+  "up.blade.n":"Lame de cuivre","up.blade.d":"+2 dégâts sur chaque coup.",
+  "up.breath.n":"Souffle long","up.breath.d":"+4 énergie max — ta lanterne brûle plus longtemps.",
+  "up.comb.n":"Peigne d'étoiles","up.comb.d":"Se protéger soigne aussi 3 PV.",
+  "up.flame.n":"Feu vif","up.flame.d":"L'Éclair de lanterne coûte 1 de moins et fait 2 de plus.",
+  "up.coat.n":"Manteau de velours","up.coat.d":"+8 PV max, et 8 PV rendus sur-le-champ.",
+  "up.whistle.n":"Sifflet d'argent","up.whistle.d":"Commence chaque combat avec +4 énergie ; se protéger rend 1 de plus.",
+  "stats.combats":"combats gagnés","stats.turns":"tours","stats.dmg":"dégâts infligés","stats.doors":"portes ouvertes","stats.items":"objets utilisés"
+};
+
+var ES = {
+  "ui.title":"El tren de las siete puertas",
+  "ui.tagline":"Una pequeña aventura en siete vagones.",
+  "ui.new":"Nuevo viaje","ui.continue":"Continuar","ui.rules":"Cómo se juega",
+  "ui.sound":"Sonido","ui.lang":"Idioma","ui.next":"Continuar","ui.ok":"Tomarlo",
+  "ui.open":"Abrir la puerta","ui.retry":"Reintentar este vagón","ui.abandon":"Volver al andén",
+  "ui.hp":"Salud","ui.energy":"Energía","ui.shield":"Escudo {v}","ui.inventory":"Bolsa",
+  "ui.empty":"(vacía)","ui.aim":"toca un rival para apuntar","ui.victory":"El paso está libre.",
+  "ui.stats":"Viaje","ui.replay":"Viajar de nuevo","ui.made":"Concepto: Cédric Bernadac · un juego hecho por Z Code (IA)",
+  "ui.endings":"Finales encontrados:","ui.langName":"Español",
+  "how.title":"Cómo se juega",
+  "how.1":"Atraviesa siete vagones para llegar a la locomotora del tren de medianoche.",
+  "how.2":"En los desvíos, elige tu camino: un combate, un encuentro o provisiones.",
+  "how.3":"Los combates son por turnos. Cada adversario anuncia primero su intención: bloquea los golpes fuertes, ataca en las aperturas.",
+  "how.4":"Golpear es gratis. Protegerse levanta un escudo y recupera 2 de energía. El Destello de farol cuesta energía y golpea más fuerte.",
+  "how.5":"Algunas puertas dan objetos o la elección entre dos mejoras. Los objetos cambian de verdad tus opciones.",
+  "how.6":"Dos finales te esperan en el fuego. Ningún objeto concreto es imprescindible para ganar.",
+  "kind.combat":"Combate","kind.encounter":"Encuentro","kind.resource":"Provisiones",
+  "act.strike":"Golpear","act.guard":"Protegerse","act.ability":"Destello de farol","act.item":"Objeto",
+  "c.cost":"{v} energía","c.blocked":"rebota",
+  "i.pounce":"Salto","i.swirl":"Remolino","i.snap":"Mordisco","i.chomp":"Tritón",
+  "i.check":"Revisión de billetes","i.cap":"Gorra ajustada","i.stamp":"Golpe de sello","i.whistle":"Silbido",
+  "i.inspection":"Inspección completa","i.shovel":"Golpe de pala","i.furnace":"Ráfaga de horno","i.hiss":"Siseo de caldera",
+  "i.piston":"Golpe de pistón","i.wsteam":"Silbido hirviente","i.steam":"Vapor pleno",
+  "intent.charge":"prepara {v}","intent.block":"se apresta","intent.drain":"aspira {v} energía",
+  "tip.charge":"Viene un golpe cargado: protegerte cuando se anuncia lo amortiguará.",
+  "log.strike":"Golpeas a {e} por <b>{v}</b>.",
+  "log.star":"¡La estrella de cobre se enciende: <b>+{v}</b>!",
+  "log.ability":"¡Destello de farol! {e} recibe <b>{v}</b>.",
+  "log.guard":"Levantas tu escudo.",
+  "log.eblock":"{e} bloquea {v}.",
+  "log.ehit":"{e} te golpea por <b>{v}</b>.",
+  "log.eblocked":"Tu escudo absorbe <b>{v}</b>.",
+  "log.drain":"{e} sorbe <b>{v}</b> de tu energía.",
+  "log.charge":"{e} prepara algo grande…",
+  "log.cap":"{e} se ajusta la gorra: tu próximo golpe rebotará.",
+  "log.tart":"Te comes la tarta. Calorcito, +{v} de salud.",
+  "log.tea":"Te tragas el té. Chispas, +{v} de energía.",
+  "log.win":"El paso está libre.",
+  "log.noenergy":"No hay energía suficiente.",
+  "it.tart.n":"Tarta de arándanos","it.tart.d":"Restaura 12 de salud. En combate, comerla gasta tu turno.",
+  "it.tea.n":"Té hirviente","it.tea.d":"+6 de energía, mejor bebido en pleno combate. Gasta tu turno.",
+  "it.ticket.n":"Billete perforado","it.ticket.d":"Los revisores respetan el papel viejo: sus golpes quitan 4 menos.",
+  "it.lantern.n":"Farol dorado","it.lantern.d":"Su brillo alimenta tu impulso: +1 de energía cada turno.",
+  "it.star.n":"Estrella de cobre","it.star.d":"Cada tercer golpe acierta 4 puntos más fuerte.",
+  "it.key.n":"Llave de la locomotora","it.key.d":"Abre el panel trasero: el combate final empieza con el enemigo 8 de salud menos.",
+  "it.cannotTea":"El té solo tiene sentido en pleno combate.",
+  "gain.hp":"Recuperas {v} de salud.","gain.maxhp":"+{v} de salud máxima","gain.hpn":"−{v} de salud (lo vale)",
+  "gain.maxen":"+{v} de energía máxima","gain.item":"{x} ×1","gain.first":"Tu primer golpe del combate final saldrá antes que el enemigo (+6).",
+  "en.wisp":"Chispa de polvo","en.trunk":"Baúl voraz","en.conductor":"Revisor sin rostro",
+  "en.conductorElite":"Inspector de la sexta puerta","en.engineerP1":"El Fogonero","en.engineerP2":"El Maquinista de medianoche",
+  "w1":"El vagón dormitorio","w2":"El vagón comedor","w3":"El vagón biblioteca","w4":"El vagón de los faroles",
+  "w5":"El vagón de carga","w6":"El vagón fantasma","w7":"El ténder de carbón","wf":"La locomotora de medianoche",
+  "ui.wagon":"Vagón {n} — {w}",
+  "door.of":"Puerta {n} de siete","door.next":"Más allá: {w}","door.creak":"Deslizas la puerta.",
+  "s1.p1":"Despiertas al chasquido de los raíles. Un asiento de terciopelo, una ventana llena de estrellas y ningún billete en el bolsillo: solo una nota doblada.",
+  "s1.p2":"Es tu propia letra: <q>Siete puertas te separan de la locomotora. Llega a ella. Luego decide qué será del fuego.</q>",
+  "s1.pre":"Bajo los asientos, el polvo se agita. Llevaba tiempo esperando a alguien cálido.",
+  "s1.reward.q":"En la red de objetos perdidos cuelgan dos cosas que valen la pena. Solo tienes sitio para una.",
+  "s2.p1":"Puerta II. El vagón comedor huele a canela y humo de vela. La mitad de las lámparas están encendidas; las demás se fueron volando, convertidas en polillas.",
+  "s2.q":"Tres pasillos, tres ruidos: un estruendo en la cocina, una cocinera que tararea junto a su olla, un destello tras la barra.",
+  "s2.kitchen.l":"El estruendo de la cocina","s2.kitchen.h":"Enfréntate a lo que saquea la despensa: buen botín.",
+  "s2.cook.l":"La cocinera que tararea","s2.cook.h":"Sentarse, comer, escuchar. Nada de armas.",
+  "s2.bar.l":"Registrar la barra","s2.bar.h":"Estanterías perdidas, provisiones halladas. Cuidado con el vidrio.",
+  "s2.kitchen.p":"Cacharros por todas partes. En la puerta de la despensa, un baúl de viaje roe una caja de galletas. Se vuelve. Tiene dientes.",
+  "s2.kitchen.win":"El baúl bosteza, domeñado. Rescatas una comida de verdad, y tu cuerpo recuerda para qué sirve el calor.",
+  "s2.cook1":"La cocinera remueve una sopa de luz de estrellas. <q>¡Pasajero! Siéntate. Come. El Maquinista nunca come, pobre alma.</q>",
+  "s2.cook2":"Te pone en las manos una tarta caliente. <q>Cuídate de la sexta puerta. El inspector de ahí no tiene rostro, solo deberes.</q>",
+  "s2.bar.p":"Tras la barra, vasos ordenados por color. Una botella rueda; la atrapas —tarde: un cristal te muerde la mano—. Pero mira: dos provisiones olvidadas.",
+  "s3.p1":"Puerta III. El vagón biblioteca. Los libros flotan un dedo por encima de sus estantes, respirando. Una lámpara verde arde en el despacho del manifiesto.",
+  "s3.q":"Oyes tres cosas: un sello que estampa en el pasillo, una voz suave que lee nombres y —tras una cuerda— un estante que zumba como una colmena.",
+  "s3.aisle.l":"El sello que estampa","s3.aisle.h":"El revisor sin rostro está revisando billetes. No tienes ninguno.",
+  "s3.archivist.l":"La voz suave","s3.archivist.h":"La Archivera de los Faroles lee el manifiesto de pasajeros.",
+  "s3.shelf.l":"El estante que zumba","s3.shelf.h":"Allí arde un farol dorado sin aceite. Al polvo no le va a gustar.",
+  "s3.aisle.p":"Gorra recta, rostro liso como una cuchara. <q>Billetes.</q> No tienes. El sello cae.",
+  "s3.aisle.win":"El revisor se derrite en trocitos de billete. Algo tibio rueda hacia tus pies.",
+  "s3.archivist1":"La Archivera lee el manifiesto de todos los que el tren ha llevado. <q>Aquí estás dos veces</q>, dice. <q>Una dormido. Una todavía no.</q>",
+  "s3.archivist2":"Perfora tu billete en blanco: <q>Enséñaselo a cualquier revisor. Respetan el papel viejo.</q>",
+  "s3.shelf.p":"Levantas la cuerda. En el estante que zumba hay un farol dorado ardiendo sin aceite. Al tocarlo, el polvo del vagón despierta: todo él.",
+  "s4.p1":"Puerta IV. Cientos de faroles pequeños cuelgan del techo, meciéndose con el tren. Debajo, un niño persigue una polilla de alas estrelladas.",
+  "s4.q":"La polilla se le escapa una y otra vez. El niño está siempre a punto de llorar.",
+  "s4.help.l":"Echar una mano","s4.help.h":"Cazar la polilla con el niño. Las polillas muerden; los niños recuerdan.",
+  "s4.watch.l":"Solo mirar","s4.watch.h":"Sentarse bajo los faroles y respirar un rato.",
+  "s4.help.p":"Echas una mano. La polilla se posa —muerde, fría como la escarcha—, pero el niño la atrapa en sus palmas, encantado.",
+  "s4.help.p2":"El niño pone en tus manos lo más brillante que tiene, y finge no sentir orgullo por el regalo.",
+  "s4.watch.p":"Te sientas entre las lucecitas y simplemente respiras, una parada entera de calma.",
+  "s5.p1":"Puerta V. El vagón de carga: cajas, cuerdas, olor a lluvia sobre el hierro. Por aquí andar un ronroneo demasiado listo.",
+  "s5.q":"Tres caminos: un gato con chaleco y una llave, una pirámide de cajas sin abrir y —en la puerta del fondo— pasos pesados y pacientes.",
+  "s5.cat.l":"El gato mercader","s5.cat.h":"<q>Solo comercio, nunca robo.</q> La llave abre el panel trasero de la locomotora.",
+  "s5.crates.l":"Abrir las cajas","s5.crates.h":"Las cerraduras se defienden. Las cajas perdonan.",
+  "s5.patrol.l":"La patrulla nocturna","s5.patrol.h":"Un baúl voraz con correa de polvo, y su pequeño amo.",
+  "s5.cat.p":"<q>Esta llave abre el panel trasero de la locomotora</q>, dice el gato. <q>Haz que me interese, y no hables nunca de ello.</q>",
+  "s5.cat.tart":"Cambiar una tarta de arándanos","s5.cat.tea":"Cambiar el té hirviente","s5.cat.hp":"Pagar 5 de salud máxima",
+  "s5.cat.tart.h":"El gato te entrega la llave, nada impresionado por las migas.",
+  "s5.cat.tea.h":"El gato huele la taza una vez y se guarda la eternidad.",
+  "s5.cat.hp.h":"El gato cobra en años y en sueño. Es más suave de lo que suena.",
+  "s5.cat.refuse":"Rechazar con cortesía","s5.cat.refuse.h":"El gato se encoge de hombros a su manera, sin usar hombros.",
+  "s5.crates.p":"Abres una caja con una cuchara de curiosidad sólida. La cerradura se resiste —tus nudillos lo pagan—, pero dentro: papel, cordel y dos milagros comestibles.",
+  "s5.patrol.p":"Al fondo espera la patrulla: un baúl que tira de su correa de polvo y la pequeña chispa que la sostiene.",
+  "s5.patrol.win":"La correa se disuelve en nada. En el polvo brilla algo cobrizo.",
+  "s6.p1":"Puerta VI. El vagón fantasma. Pasajeros del color de la luna te saludan con cortesía desde asientos que ya no hundían. Al fondo, bajo una gorra de plata, espera el Inspector de la sexta puerta.",
+  "s6.win":"El inspector se pliega en un solo billete, perforado de lado a lado. En el rincón de la tripulación, una tetera todavía canta; bebes algo que sabe a ser recordado.",
+  "s7.p1":"Puerta VII. El ténder de carbón. Viento nocturno, polvo de carbón como nieve lenta. La locomotora está a una puerta, respirando.",
+  "s7.q":"Unos minutos para ti antes de la última puerta. ¿Cómo los empleas?",
+  "s7.sleep.l":"Dormir junto a la escotilla","s7.sleep.h":"La caldera está caliente. El sueño es bueno precisamente porque está vacío.",
+  "s7.sharpen.l":"Afilar tu hierro","s7.sharpen.h":"Pasar la hoja viajera por la piedra hasta que tararee. El combate final empezará con el enemigo 6 de salud menos.",
+  "s7.sleep.p":"Duermes contra la escotilla tibia y sueñas con nada: la buena nada.",
+  "s7.sharpen.p":"Afilar tu hierro hasta que tararea una cancioncilla propia.",
+  "f.p1":"La cabina es toda cobre y resplandor. Una figura alimenta la caldera con palas de noche. Sus gafas reflejan un horno que nunca mira.",
+  "f.p2":"<q>Todo viajero llega a esta puerta</q>, dice el Maquinista de medianoche. <q>Menos llegan al fuego todavía eligiendo. Muéstrame de qué clase eres.</q>",
+  "f.phase2":"El Maquinista deja la pala. El fuego se asoma a la caldera para mirar. Ahora viene la conducción misma.",
+  "f.q":"El hogar está abierto de par en par. El fuego del tren —cálido, paciente, hecho de todos los faroles dejados atrás en todos los viajes— espera tu mano.",
+  "f.fire.l":"Tomar el fuego","f.fire.h":"Convertirte en el Maquinista. El tren sigue, y sigue.",
+  "f.dawn.l":"Dejarlo ir","f.dawn.h":"Abrir del todo el registro. Dejar que el fuego vea el cielo.",
+  "end.fire.t":"El fuego es tuyo",
+  "end.fire.p1":"Tomas el fuego. No pesa nada y lo pesa todo, como una decisión por fin tomada.",
+  "end.fire.p2":"La locomotora canta. Las siete puertas se cierran a tu espalda, y cada una, ahora, se abre donde tú pidas.",
+  "end.fire.child":"En el último vagón, el niño del farol saluda. Velas una vez el faro, suavemente, para no despertar a las polillas.",
+  "end.dawn.t":"El alba",
+  "end.dawn.p1":"Abres el registro del todo. El fuego sube por la chimenea como una bandada de chispas que por fin recuerda que sabe volar.",
+  "end.dawn.p2":"El tren frena hacia un horizonte rosa. Bajas a un andén que huele a lluvia. La nota de tu bolsillo está en blanco ahora. Y está bien así.",
+  "end.dawn.child":"Una polilla de alas estrelladas se posa en tu hombro justo cuando sale el sol.",
+  "go.t":"El tren te lleva de vuelta",
+  "go.p":"Calidez oscura, chasquido de raíles. Una voz como de cartón perforado: <q>No esta puerta, viajero. Descansa. Reintenta el vagón.</q>",
+  "up.q":"La puerta entre dos vagones ofrece un regalo. Elige uno.",
+  "up.blade.n":"Hoja de cobre","up.blade.d":"+2 de daño en cada golpe.",
+  "up.breath.n":"Aliento largo","up.breath.d":"+4 de energía máxima: tu farol arde más tiempo.",
+  "up.comb.n":"Peine de estrellas","up.comb.d":"Protegerse también cura 3 de salud.",
+  "up.flame.n":"Flama viva","up.flame.d":"El Destello de farol cuesta 1 menos y quita 2 más.",
+  "up.coat.n":"Abrigo de terciopelo","up.coat.d":"+8 de salud máxima, y cura 8 al instante.",
+  "up.whistle.n":"Silbato de plata","up.whistle.d":"Empieza cada combate con +4 de energía; protegerse da 1 más.",
+  "stats.combats":"combates ganados","stats.turns":"turnos","stats.dmg":"daño infligido","stats.doors":"puertas abiertas","stats.items":"objetos usados"
+};
+
+var I18N = {en:EN, fr:FR, es:ES};
+function fmt(s,p){ if(!p) return s; return String(s).replace(/\{(\w+)\}/g, function(m,k){ return (p && k in p) ? String(p[k]) : m; }); }
+function T(key,p){ var d=I18N[S.lang]||EN; var s=d[key]; if(s===undefined){ s=EN[key]; } if(s===undefined){ return key; } return fmt(s,p); }
+
+/* ---------------- enemies ---------------- */
+var ENEMIES = {
+  wisp: { key:"wisp", family:"wisp", hp:8, script:[
+    {t:"hit", v:4, k:"i.pounce"},
+    {t:"drain", v:3, d:1, k:"i.swirl"} ]},
+  trunk: { key:"trunk", family:"trunk", hp:22, script:[
+    {t:"hit", v:6, k:"i.snap"},
+    {t:"hit", v:6, k:"i.snap"},
+    {t:"charge", v:13, k:"i.chomp"},
+    {t:"hit", v:13, k:"i.chomp"} ]},
+  conductor: { key:"conductor", family:"conductor", hp:24, script:[
+    {t:"hit", v:3, k:"i.check"},
+    {t:"block", v:6, k:"i.cap"},
+    {t:"charge", v:14, k:"i.stamp"},
+    {t:"hit", v:14, k:"i.stamp"} ]},
+  conductorElite: { key:"conductorElite", family:"conductor", hp:34, script:[
+    {t:"drain", v:0, d:2, k:"i.whistle"},
+    {t:"charge", v:18, k:"i.inspection"},
+    {t:"hit", v:18, k:"i.inspection"},
+    {t:"hit", v:13, k:"i.stamp"} ]},
+  engineerP1: { key:"engineerP1", family:"engineer", hp:28, script:[
+    {t:"hit", v:8, k:"i.shovel"},
+    {t:"charge", v:18, k:"i.furnace"},
+    {t:"hit", v:18, k:"i.furnace"},
+    {t:"drain", v:0, d:2, k:"i.hiss"} ]},
+  engineerP2: { key:"engineerP2", family:"engineer", hp:25, script:[
+    {t:"charge", v:20, k:"i.steam"},
+    {t:"hit", v:20, k:"i.steam"},
+    {t:"hit", v:10, k:"i.piston"},
+    {t:"drain", v:5, d:1, k:"i.wsteam"} ]}
+};
+
+/* ---------------- items / upgrades ---------------- */
+var CONSUMABLES = ["tart","tea"];
+var PASSIVES = ["ticket","lantern","star","key"];
+var UPGRADE_PAIRS = [
+  ["blade","breath"],
+  ["comb","flame"],
+  ["coat","whistle"]
+];
+var DYN = {
+  lanternOrTart: function(){ if(!S.passives.lantern){ S.passives.lantern=true; return ["gain.item", {x:T("it.lantern.n")}]; } S.inv.tart++; return ["gain.item", {x:T("it.tart.n")}]; },
+  starOrMaxhp: function(){ if(!S.passives.star){ S.passives.star=true; return ["gain.item", {x:T("it.star.n")}]; } S.maxHp+=2; return ["gain.maxhp", {v:2}]; }
+};
+
+/* ---------------- stages ---------------- */
+var STAGES = [
+  { wagon:"w1", steps:[
+    {t:"story", pages:["s1.p1","s1.p2","s1.pre"]},
+    {t:"combat", enemies:["wisp","wisp"]},
+    {t:"reward", q:"s1.reward.q", options:[
+      {id:"tart", item:"tart"},
+      {id:"tea", item:"tea"}]},
+    {t:"door", n:1} ]},
+  { wagon:"w2", steps:[
+    {t:"story", pages:["s2.p1"]},
+    {t:"branch", q:"s2.q", options:[
+      {id:"kitchen", kind:"combat", steps:[
+        {t:"story", pages:["s2.kitchen.p"]},
+        {t:"combat", enemies:["trunk"], then:[{t:"effects", lead:"s2.kitchen.win", list:[
+          {t:"maxhp",v:3},{t:"heal",v:12},{t:"item",id:"tart",n:1}]}]} ]},
+      {id:"cook", kind:"encounter", steps:[
+        {t:"story", pages:["s2.cook1","s2.cook2"]},
+        {t:"effects", list:[{t:"heal",v:12},{t:"item",id:"tart",n:1}]} ]},
+      {id:"bar", kind:"resource", steps:[
+        {t:"story", pages:["s2.bar.p"]},
+        {t:"effects", list:[{t:"hp",v:-2},{t:"item",id:"tart",n:1},{t:"item",id:"tea",n:1}]} ]} ]},
+    {t:"upgrade", pair:0},
+    {t:"door", n:2} ]},
+  { wagon:"w3", steps:[
+    {t:"story", pages:["s3.p1"]},
+    {t:"branch", q:"s3.q", options:[
+      {id:"aisle", kind:"combat", steps:[
+        {t:"story", pages:["s3.aisle.p"]},
+        {t:"combat", enemies:["conductor"], then:[{t:"effects", lead:"s3.aisle.win", list:[{t:"dyn",id:"starOrMaxhp"}]}]} ]},
+      {id:"archivist", kind:"encounter", steps:[
+        {t:"story", pages:["s3.archivist1","s3.archivist2"]},
+        {t:"effects", list:[{t:"passive",id:"ticket"}]} ]},
+      {id:"shelf", kind:"resource", steps:[
+        {t:"story", pages:["s3.shelf.p"]},
+        {t:"effects", list:[{t:"passive",id:"lantern"}]},
+        {t:"combat", enemies:["wisp","wisp"], then:[{t:"effects", list:[{t:"heal",v:6}]}]} ]} ]},
+    {t:"door", n:3} ]},
+  { wagon:"w4", steps:[
+    {t:"story", pages:["s4.p1"]},
+    {t:"choice", q:"s4.q", options:[
+      {id:"help", steps:[
+        {t:"story", pages:["s4.help.p"]},
+        {t:"effects", list:[{t:"hp",v:-3},{t:"flag",k:"child",v:true},{t:"dyn",id:"lanternOrTart"}], lead:"s4.help.p2"} ]},
+      {id:"watch", steps:[
+        {t:"story", pages:["s4.watch.p"]},
+        {t:"effects", list:[{t:"heal",v:5}]} ]} ]},
+    {t:"upgrade", pair:1},
+    {t:"door", n:4} ]},
+  { wagon:"w5", steps:[
+    {t:"story", pages:["s5.p1"]},
+    {t:"branch", q:"s5.q", options:[
+      {id:"cat", kind:"encounter", steps:[
+        {t:"story", pages:["s5.cat.p"]},
+        {t:"catTrade"} ]},
+      {id:"crates", kind:"resource", steps:[
+        {t:"story", pages:["s5.crates.p"]},
+        {t:"effects", list:[{t:"hp",v:-3},{t:"item",id:"tart",n:1},{t:"item",id:"tea",n:1}]} ]},
+      {id:"patrol", kind:"combat", steps:[
+        {t:"story", pages:["s5.patrol.p"]},
+        {t:"combat", enemies:["trunk","wisp"], then:[{t:"effects", lead:"s5.patrol.win", list:[{t:"heal",v:8},{t:"dyn",id:"starOrMaxhp"}]}]} ]} ]},
+    {t:"door", n:5} ]},
+  { wagon:"w6", steps:[
+    {t:"story", pages:["s6.p1"]},
+    {t:"combat", enemies:["conductorElite"], then:[{t:"effects", lead:"s6.win", list:[{t:"heal",v:14}]}]},
+    {t:"upgrade", pair:2},
+    {t:"door", n:6} ]},
+  { wagon:"w7", steps:[
+    {t:"story", pages:["s7.p1"]},
+    {t:"choice", q:"s7.q", options:[
+      {id:"sleep", steps:[
+        {t:"story", pages:["s7.sleep.p"]},
+        {t:"effects", list:[{t:"heal",v:10}]} ]},
+      {id:"sharpen", steps:[
+        {t:"story", pages:["s7.sharpen.p"]},
+        {t:"effects", list:[{t:"flag",k:"firstStrike",v:true},{t:"dynFirst"}]} ]} ]},
+    {t:"door", n:7} ]},
+  { wagon:"wf", finale:true, steps:[
+    {t:"story", pages:["f.p1","f.p2"]},
+    {t:"combat", enemies:["engineerP1"], finale:1, then:[
+      {t:"story", pages:["f.phase2"]},
+      {t:"combat", enemies:["engineerP2"], finale:2} ]},
+    {t:"finalChoice"},
+    {t:"ending"} ]}
+];
+
+/* ---------------- state ---------------- */
+var S = null;
+var DEFAULT_LANG = "en";
+function freshState(lang, seed){
+  return {
+    lang: lang||"en", seed: (seed>>>0), a: (seed>>>0),
+    hp:30, maxHp:30, en:6, maxEn:10,
+    inv:{tart:0, tea:0}, passives:{}, ups:{},
+    stage:0, queue:[], pageIdx:0, combat:null, flags:{},
+    stats:{combats:0, won:0, turns:0, dmg:0, doors:0, items:0},
+    snap:null, log:[], view:{type:"title"}, over:false, ending:null, tipCharge:false
+  };
+}
+function R(){ S.a|=0; S.a = S.a + 0x6D2B79F5 | 0; var t = Math.imul(S.a ^ S.a>>>15, 1|S.a); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0)/4294967296; }
+function rint(lo,hi){ return lo + Math.floor(R()*(hi-lo+1)); }
+function hasUp(id){ return !!S.ups[id]; }
+function hasP(id){ return !!S.passives[id]; }
+function pushLog(k,p,cls){ S.log.push({k:k,p:p||{},cls:cls||""}); if(S.log.length>40) S.log.shift(); }
+
+function snapshot(){ return {
+  hp:S.hp, maxHp:S.maxHp, en:S.en, maxEn:S.maxEn,
+  inv:JSON.parse(JSON.stringify(S.inv)), passives:JSON.parse(JSON.stringify(S.passives)),
+  ups:JSON.parse(JSON.stringify(S.ups)), flags:JSON.parse(JSON.stringify(S.flags)),
+  stats:JSON.parse(JSON.stringify(S.stats))
+}; }
+function restore(snap){ S.hp=Math.max(1,Math.ceil(snap.maxHp*0.7)); S.maxHp=snap.maxHp; S.en=snap.en; S.maxEn=snap.maxEn;
+  S.inv=JSON.parse(JSON.stringify(snap.inv)); S.passives=JSON.parse(JSON.stringify(snap.passives));
+  S.ups=JSON.parse(JSON.stringify(snap.ups)); S.flags=JSON.parse(JSON.stringify(snap.flags)); }
+
+/* ---------------- effects ---------------- */
+function applyEffects(list){
+  var gains=[];
+  list.forEach(function(e){
+    if(e.t==="heal"){ var v=Math.min(e.v, S.maxHp-S.hp); S.hp+=v; gains.push(["gain.hp",{v:v}]); }
+    else if(e.t==="hp"){ S.hp+=e.v; if(S.hp<1)S.hp=1; gains.push(["gain.hpn",{v:-e.v},"cost"]); }
+    else if(e.t==="maxhp"){ S.maxHp+=e.v; S.hp+=e.v; gains.push(["gain.maxhp",{v:e.v}]); }
+    else if(e.t==="maxen"){ S.maxEn+=e.v; gains.push(["gain.maxen",{v:e.v}]); }
+    else if(e.t==="item"){ S.inv[e.id]=(S.inv[e.id]||0)+(e.n||1); gains.push(["gain.item",{x:T("it."+e.id+".n")}]); }
+    else if(e.t==="passive"){ S.passives[e.id]=true; gains.push(["gain.item",{x:T("it."+e.id+".n")}]); }
+    else if(e.t==="flag"){ S.flags[e.k]=e.v; }
+    else if(e.t==="dyn"){ var g=DYN[e.id](); gains.push(g); }
+    else if(e.t==="dynFirst"){ S.flags.firstStrike=true; gains.push(["gain.first",{}]); }
+  });
+  return gains;
+}
+
+/* ---------------- interpreter ---------------- */
+function enterStage(i){
+  S.stage=i; S.queue=STAGES[i].steps.slice(); S.pageIdx=0; S.snap=snapshot();
+  advance();
+}
+function advance(){
+  if(!S.queue.length){
+    if(S.stage+1 < STAGES.length){ enterStage(S.stage+1); }
+    else { S.view={type:"title"}; }
+    return;
+  }
+  var step=S.queue.shift();
+  switch(step.t){
+    case "story":
+      S.pageIdx=0; S.view={type:"story", stage:S.stage, pages:step.pages.slice()}; break;
+    case "branch":
+      S.view={type:"branch", stage:S.stage, q:step.q, options:step.options.map(function(o){return {id:o.id,kind:o.kind||"",l:o.l,h:o.h};})}; break;
+    case "choice":
+      S.view={type:"choice", stage:S.stage, q:step.q, options:step.options.map(function(o){return {id:o.id,kind:o.kind||"",l:o.l,h:o.h};})}; break;
+    case "reward":
+      S.view={type:"reward", stage:S.stage, q:step.q, options:step.options.map(function(o){return {id:o.id, item:o.item};})}; break;
+    case "upgrade":
+      var pair=UPGRADE_PAIRS[step.pair];
+      S.view={type:"upgrade", stage:S.stage, options:pair.map(function(id){return {id:id};})}; break;
+    case "effects":
+      var gains=applyEffects(step.list);
+      S.view={type:"gains", stage:S.stage, lead:step.lead||null, gains:gains}; break;
+    case "catTrade":
+      var opts=[];
+      if((S.inv.tart||0)>0) opts.push({id:"tradetart", l:"s5.cat.tart", h:"s5.cat.tart.h", cost:"tart"});
+      else if((S.inv.tea||0)>0) opts.push({id:"tradetea", l:"s5.cat.tea", h:"s5.cat.tea.h", cost:"tea"});
+      else opts.push({id:"tradehp", l:"s5.cat.hp", h:"s5.cat.hp.h", cost:"hp"});
+      opts.push({id:"refuse", l:"s5.cat.refuse", h:"s5.cat.refuse.h"});
+      S.view={type:"choice", stage:S.stage, q:null, cat:true, options:opts}; break;
+    case "combat":
+      startCombat(step.enemies, step.then||[], step.finale||0); break;
+    case "door":
+      S.view={type:"door", stage:S.stage, n:step.n}; break;
+    case "finalChoice":
+      S.view={type:"choice", stage:S.stage, final:true, q:"f.q", options:[
+        {id:"fire", l:"f.fire.l", h:"f.fire.h"},
+        {id:"dawn", l:"f.dawn.l", h:"f.dawn.h"}]}; break;
+    case "ending":
+      buildEnding(); break;
+    default: advance();
+  }
+}
+
+/* ---------------- combat ---------------- */
+function spawnEnemy(key){
+  var def=ENEMIES[key];
+  return {k:key, hp:def.hp, maxHp:def.hp, si:0, block:0, intent:def.script[0]};
+}
+function startCombat(keys, then, finale){
+  var list=keys.map(spawnEnemy);
+  if(finale===1){
+    if(hasP("key")) list[0].hp-=8;
+    if(S.flags.firstStrike) list[0].hp-=6;
+    if(list[0].hp<1) list[0].hp=1;
+  }
+  S.combat={ list:list, you:{block:0}, strikes:0, turn:1, finale:finale||0, then:then||[], phase:finale||0 };
+  S.en = Math.min(S.maxEn, 6 + (hasUp("whistle")?4:0));
+  S.stats.combats++;
+  S.view=combatView();
+}
+function aliveList(){ return S.combat.list.filter(function(e){return e.hp>0;}); }
+function combatView(){
+  var c=S.combat;
+  var abilityCost=hasUp("flame")?3:4;
+  return { type:"combat", stage:S.stage,
+    enemies:c.list.map(function(e,i){ return {i:i, k:e.k, hp:e.hp, maxHp:e.maxHp, block:e.block, intent:e.intent}; }),
+    you:{hp:S.hp, maxHp:S.maxHp, en:S.en, maxEn:S.maxEn, block:c.you.block, strikes:c.strikes},
+    actions:{strike:true, guard:true, ability:S.en>=abilityCost, cost:abilityCost},
+    items:{tart:(S.inv.tart||0)>0, tea:(S.inv.tea||0)>0},
+    log:S.log.slice(-8),
+    tip:(!S.tipCharge && c.list.some(function(e){return e.hp>0 && e.intent.t==="charge";})) ? "tip.charge" : null };
+}
+function hitEnemy(e, dmg, ignoreBlock){
+  var d=dmg;
+  if(e.block>0 && !ignoreBlock){
+    var b=Math.min(e.block, dmg-1); d=dmg-b;
+    pushLog("log.eblock",{e:T("en."+e.k),v:b});
+    e.block=0;
+  }
+  e.hp-=d; S.stats.dmg+=d;
+  if(e.hp<0){ d+=e.hp; S.stats.dmg+=e.hp; e.hp=0; } // count real damage only
+  return d;
+}
+function enemyHitsYou(e, base){
+  var v=base;
+  if(ENEMIES[e.k].family==="conductor" && hasP("ticket")) v=Math.max(1, v-4);
+  var blocked=0;
+  if(S.combat.you.block>0){ blocked=Math.min(S.combat.you.block, v); S.combat.you.block-=blocked; v-=blocked; }
+  S.hp-=v;
+  return {took:v, blocked:blocked};
+}
+function afterPlayerAction(){
+  var c=S.combat;
+  var alive=aliveList();
+  if(!alive.length){
+    S.stats.won++;
+    pushLog("log.win");
+    S.combat=null;
+    S.view={type:"gains", stage:S.stage, lead:null, gains:[], win:true};
+    return; // advance happens on choose('ok') → queue then-steps
+  }
+  // enemy phase
+  var youHit=false;
+  alive.forEach(function(e){
+    var it=e.intent, def=ENEMIES[e.k];
+    if(it.t==="hit"){
+      var r=enemyHitsYou(e, it.v);
+      if(r.blocked>0) pushLog("log.eblocked",{v:r.blocked},"lg-good");
+      if(r.took>0){ pushLog("log.ehit",{e:T("en."+e.k),v:r.took},"lg-bad"); youHit=true; }
+    } else if(it.t==="drain"){
+      var r2=enemyHitsYou(e, it.v);
+      if(r2.blocked>0) pushLog("log.eblocked",{v:r2.blocked},"lg-good");
+      if(r2.took>0){ pushLog("log.ehit",{e:T("en."+e.k),v:r2.took},"lg-bad"); youHit=true; }
+      S.en=Math.max(0,S.en-it.d);
+      pushLog("log.drain",{e:T("en."+e.k),v:it.d},"lg-bad");
+    } else if(it.t==="charge"){
+      S.tipCharge=true;
+      pushLog("log.charge",{e:T("en."+e.k)});
+    } else if(it.t==="block"){
+      e.block=it.v;
+      pushLog("log.cap",{e:T("en."+e.k)});
+    }
+    if(e.hp>0){ e.si=(e.si+1)%def.script.length; e.intent=def.script[e.si]; }
+  });
+  if(S.hp<=0){
+    S.hp=0; S.combat=null; S.over=true;
+    S.view={type:"gameover", stage:S.stage};
+    return;
+  }
+  // new player turn
+  c.you.block=0;
+  S.en=Math.min(S.maxEn, S.en+2+(hasP("lantern")?1:0));
+  c.turn++; S.stats.turns++;
+  S.lastYouHit=youHit;
+  S.view=combatView();
+}
+
+/* ---------------- API ---------------- */
+var API = {
+  version: VERSION, langs: LANGS, i18n: I18N, enemies: ENEMIES, stages: STAGES, upgradePairs: UPGRADE_PAIRS,
+  T:function(k,p){ return T(k,p); },
+  setLang:function(l){ if(I18N[l]){ DEFAULT_LANG=l; if(S){ S.lang=l; } } return S ? S.lang : DEFAULT_LANG; },
+  state:function(){ return S ? JSON.parse(JSON.stringify(S)) : null; },
+  view:function(){ return S ? JSON.parse(JSON.stringify(S.view)) : null; },
+  newRun:function(seed){
+    seed = (seed===undefined) ? (Math.floor(Math.random()*0x7fffffff)>>>0) : (seed>>>0);
+    S = freshState(DEFAULT_LANG, seed);
+    enterStage(0);
+    return API.view();
+  },
+  choose:function(id){
+    if(!S) return null;
+    var v=S.view;
+    if(v.type==="story" && id==="next"){
+      S.pageIdx++;
+      if(S.pageIdx>=v.pages.length) advance();
+      return API.view();
+    }
+    if(v.type==="gains" && id==="ok"){
+      if(v.win && S.combat===null){
+        S.queue=S.combatThen.concat(S.queue);
+      }
+      advance();
+      return API.view();
+    }
+    if(v.type==="branch" || v.type==="choice" || v.type==="reward" || v.type==="upgrade"){
+      var opt=null, pool=null;
+      if(v.type==="branch"){ pool=STAGES[S.stage].steps; }
+      if(v.type==="branch"||v.type==="choice"){
+        opt=v.options.filter(function(o){return o.id===id;})[0];
+      } else if(v.type==="reward"){
+        opt=v.options.filter(function(o){return o.id===id;})[0];
+        if(opt){ applyEffects([{t:"item",id:opt.item,n:1}]); advance(); return API.view(); }
+      } else if(v.type==="upgrade"){
+        opt=v.options.filter(function(o){return o.id===id;})[0];
+        if(opt){ S.ups[id]=true;
+          var fx=[];
+          if(id==="breath"){ S.maxEn+=4; fx=[["gain.maxen",{v:4}]]; }
+          if(id==="coat"){ S.maxHp+=8; S.hp+=8; fx=[["gain.maxhp",{v:8}],["gain.hp",{v:8}]]; }
+          S.view={type:"gains", stage:S.stage, lead:null, gains:fx};
+          return API.view();
+        }
+      }
+      if(opt && v.type!=="upgrade"){
+        // find original option with steps
+        var full=findOption(v, id);
+        if(full && full.steps){ S.queue=full.steps.concat(S.queue); }
+        if(full && full.effects){ applyEffects(full.effects); }
+        if(v.cat && id!=="refuse"){
+          var costs={tradetart:["tart"],tradetea:["tea"],tradehp:["hp"]};
+          var c=costs[id];
+          if(c){ 
+            if(id==="tradetart"){ S.inv.tart--; }
+            if(id==="tradetea"){ S.inv.tea--; }
+            if(id==="tradehp"){ S.maxHp-=5; if(S.hp>S.maxHp)S.hp=S.maxHp; }
+            S.passives.key=true;
+            var hint=id==="tradehp"?"s5.cat.hp.h":(id==="tradetart"?"s5.cat.tart.h":"s5.cat.tea.h");
+            S.view={type:"gains", stage:S.stage, lead:hint, gains:[["gain.item",{x:T("it.key.n")}]]};
+            return API.view();
+          }
+        }
+        advance();
+      }
+      return API.view();
+    }
+    if(v.type==="door" && id==="open"){
+      S.stats.doors++;
+      advance();
+      return API.view();
+    }
+    if(v.type==="finalChoiceSel" ){ /* unused */ }
+    if(v.type==="choice" ){ }
+    return API.view();
+  },
+  /* target: index into combat list */
+  act:function(action, target, item){
+    if(!S || !S.combat) return API.view();
+    var c=S.combat;
+    var alive=aliveList();
+    if(!alive.length) return API.view();
+    var t=c.list[target];
+    if(!t || t.hp<=0){ t=alive[0]; target=c.list.indexOf(t); }
+    if(action==="strike"){
+      var dmg=rint(5,7)+(hasUp("blade")?2:0);
+      c.strikes++;
+      var crit=false;
+      if(hasP("star") && c.strikes%3===0){ dmg+=4; crit=true; }
+      var dealt=hitEnemy(t, dmg, false);
+      pushLog("log.strike",{e:T("en."+t.k),v:dealt});
+      if(crit) pushLog("log.star",{v:4},"lg-star");
+      afterPlayerAction();
+    } else if(action==="guard"){
+      c.you.block=7;
+      S.en=Math.min(S.maxEn, S.en+2+(hasUp("whistle")?1:0));
+      pushLog("log.guard");
+      if(hasUp("comb")){ var h=Math.min(3,S.maxHp-S.hp); if(h>0){ S.hp+=h; pushLog("log.tart",{v:h},"lg-good"); } }
+      afterPlayerAction();
+    } else if(action==="ability"){
+      var cost=hasUp("flame")?3:4;
+      if(S.en<cost){ pushLog("log.noenergy"); return API.view(); }
+      S.en-=cost;
+      var dmg2=10+(hasUp("flame")?2:0);
+      var dealt2=hitEnemy(t, dmg2, true);
+      pushLog("log.ability",{e:T("en."+t.k),v:dealt2},"lg-star");
+      afterPlayerAction();
+    } else if(action==="item"){
+      if(item==="tart" && S.inv.tart>0){
+        S.inv.tart--; S.stats.items++;
+        var h2=Math.min(12,S.maxHp-S.hp); S.hp+=h2;
+        pushLog("log.tart",{v:h2},"lg-good");
+        afterPlayerAction();
+      } else if(item==="tea" && S.inv.tea>0){
+        S.inv.tea--; S.stats.items++;
+        var e2=Math.min(6,S.maxEn-S.en); S.en+=e2;
+        pushLog("log.tea",{v:e2},"lg-good");
+        afterPlayerAction();
+      }
+    }
+    return API.view();
+  },
+  useItemOut:function(id){
+    if(!S) return API.view();
+    if(S.combat) return API.view();
+    if(id==="tart" && S.inv.tart>0 && S.hp<S.maxHp){
+      S.inv.tart--; S.stats.items++;
+      S.hp=Math.min(S.maxHp,S.hp+12);
+    }
+    return API.view();
+  },
+  retryStage:function(){
+    if(!S || !S.over || !S.snap) return API.view();
+    restore(S.snap);
+    S.over=false; S.log=[];
+    S.queue=STAGES[S.stage].steps.slice(); S.pageIdx=0; S.combat=null;
+    advance();
+    return API.view();
+  },
+  abandon:function(){ if(S){ S.over=true; } S.view={type:"title"}; return API.view(); },
+  toTitle:function(){ S.view={type:"title"}; return API.view(); },
+  save:function(){ if(!S) return null;
+    return JSON.stringify({v:1, core:S}); },
+  load:function(json){
+    try{
+      var d=JSON.parse(json);
+      if(d && d.v===1 && d.core){ S=d.core; return API.view(); }
+    }catch(e){}
+    return null;
+  },
+  hasRun:function(){ return !!S && !S.over && S.view.type!=="title"; },
+  /* QA/test hooks (single-player game; also used by browser checks) */
+  debug:{
+    setHp:function(v){ if(S){ S.hp=v; } },
+    setEn:function(v){ if(S){ S.en=v; } },
+    give:function(id){ if(S){ if(S.inv[id]!==undefined){ S.inv[id]++; } else { S.passives[id]=true; } } },
+    up:function(id){ if(S){ S.ups[id]=true; if(id==="breath"){S.maxEn+=4;} if(id==="coat"){S.maxHp+=8;S.hp+=8;} } }
+  }
+};
+
+function findOption(v,id){
+  // search all stages' branch/choice option lists for full option (with steps)
+  for(var i=0;i<STAGES.length;i++){
+    var steps=STAGES[i].steps;
+    for(var j=0;j<steps.length;j++){
+      var st=steps[j];
+      if(st.options){
+        for(var k2=0;k2<st.options.length;k2++){
+          if(st.options[k2].id===id) return st.options[k2];
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/* final choice: after victory of finale, the 'finalChoice' step renders a choice view;
+   selecting fire/dawn sets S.ending and advances to ending step */
+var _origChoose = API.choose;
+API.choose = function(id){
+  var v=S ? S.view : null;
+  if(v && v.type==="choice" && v.final && (id==="fire"||id==="dawn")){
+    S.ending=id;
+    advance();
+    return API.view();
+  }
+  if(v && v.type==="gains" && v.win && S.combat===null){
+    // attach pending then-steps: they were stored on the combat step — recover from view? stored in S.combatThen
+  }
+  return _origChoose(id);
+};
+
+function buildEnding(){
+  var which=S.ending||"dawn";
+  var paras=[T("end."+which+".p1"), T("end."+which+".p2")];
+  if(S.flags.child) paras.push(T("end."+which+".child"));
+  S.over=true;
+  if(API.onEnding) { try{ API.onEnding(which); }catch(e){} }
+  S.view={type:"ending", which:which, title:T("end."+which+".t"), paras:paras,
+    stats:{combats:S.stats.won, turns:S.stats.turns, dmg:S.stats.dmg, doors:S.stats.doors, items:S.stats.items}};
+}
+
+/* expose combatThen plumbing: set when combat step consumed */
+var _startCombat=startCombat;
+startCombat=function(keys, then, finale){
+  S.combatThen=then||[];
+  _startCombat(keys, then, finale);
+};
+
+return API;
+})();
+if (typeof module!=="undefined" && module.exports){ module.exports = TrainCore; }
+</script>
+
+<script id="train-ui">
+"use strict";
+/* =====================================================================
+   UI layer — rendering, audio, save/Load, debug hook. No game rules.
+   ===================================================================== */
+(function(){
+var UI = {
+  lang:"en", sound:true, hasSave:false, meta:{endings:{}}, target:0,
+  KEY_SAVE:"train7.save", KEY_LANG:"train7.lang", KEY_SOUND:"train7.sound", KEY_META:"train7.meta"
+};
+function st(n,v){ try{ if(v===undefined){ return localStorage.getItem(n); } localStorage.setItem(n,v); }catch(e){ return null; } }
+
+/* ---------- audio ---------- */
+var AU={ctx:null};
+function auInit(){ if(!AU.ctx){ try{ AU.ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(AU.ctx && AU.ctx.state==="suspended"){ AU.ctx.resume(); } }
+function tone(f,dur,type,gain,when,f2){
+  if(!UI.sound||!AU.ctx) return;
+  var c=AU.ctx, t0=c.currentTime+(when||0);
+  var o=c.createOscillator(), g=c.createGain();
+  o.type=type||"sine"; o.frequency.setValueAtTime(f,t0);
+  if(f2){ o.frequency.exponentialRampToValueAtTime(f2,t0+dur); }
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(gain||0.12,t0+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t0); o.stop(t0+dur+0.05);
+}
+var SND={
+  click:function(){ tone(620,0.06,"sine",0.05); },
+  hit:function(){ tone(120,0.16,"square",0.09,0,70); },
+  star:function(){ tone(880,0.1,"sine",0.07); tone(1320,0.14,"sine",0.05,0.06); },
+  ability:function(){ tone(520,0.2,"sawtooth",0.06,0,180); },
+  guard:function(){ tone(300,0.14,"triangle",0.09,0,200); },
+  ehit:function(){ tone(90,0.22,"sawtooth",0.09,0,55); },
+  drain:function(){ tone(400,0.25,"sine",0.05,0,160); },
+  heal:function(){ tone(520,0.1,"sine",0.07); tone(660,0.12,"sine",0.06,0.08); },
+  item:function(){ tone(760,0.08,"sine",0.06); tone(980,0.1,"sine",0.05,0.07); },
+  door:function(){ tone(70,0.3,"sawtooth",0.05,0,60); tone(660,0.2,"sine",0.05,0.22); tone(880,0.25,"sine",0.05,0.32); },
+  win:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,0.16,"sine",0.06,i*0.09); }); },
+  lose:function(){ [330,262,196].forEach(function(f,i){ tone(f,0.25,"sine",0.07,i*0.14); }); },
+  end:function(){ [392,523,659,784,1046,1318].forEach(function(f,i){ tone(f,0.3,"sine",0.055,i*0.16); }); }
+};
+function snd(n){ auInit(); if(SND[n]) SND[n](); }
+
+/* ---------- art (SVG builders) ---------- */
+function stars(n,w,h,cls,seedShift){
+  var out="", s=42+ (seedShift||0);
+  for(var i=0;i<n;i++){
+    s=(s*1103515245+12345)>>>0; var x=(s%1000)/1000*w;
+    s=(s*1103515245+12345)>>>0; var y=(s%1000)/1000*h;
+    s=(s*1103515245+12345)>>>0; var r=((s%1000)/1000*1.1+0.4).toFixed(1);
+    out+='<circle cx="'+x.toFixed(0)+'" cy="'+y.toFixed(0)+'" r="'+r+'" fill="#f2e8d5" opacity="0.85"/>';
+  }
+  return '<g class="'+cls+'">'+out+'</g>';
+}
+function windowSVG(accent){
+  return '<g>'+
+    '<rect x="0" y="0" width="480" height="240" fill="#160c24"/>'+
+    stars(46,480,150,"starsA",7)+stars(22,480,110,"starsB",91)+
+    '<path d="M0 150 Q120 168 240 150 T480 150 L480 240 L0 240 Z" fill="#1d1130"/>'+
+    '<path d="M0 150 Q120 168 240 150 T480 150" fill="none" stroke="'+accent+'" stroke-width="2" opacity=".5"/>'+
+    '</g>';
+}
+/* wagon scene: window + silhouettes; v = wagon id */
+function sceneSVG(w){
+  var A={w1:"#7fa8d9",w2:"#e0a458",w3:"#7fc9a8",w4:"#ffd97a",w5:"#c98a5a",w6:"#b9a8c9",w7:"#e07856",wf:"#ff9e5e"}[w]||"#d9a441";
+  var inner="";
+  if(w==="w1"){
+    inner='<rect x="40" y="188" width="120" height="14" rx="4" fill="#1b1029"/><rect x="40" y="150" width="120" height="10" rx="4" fill="#1b1029"/>'+
+    '<rect x="180" y="160" width="110" height="42" rx="6" fill="#1b1029"/><rect x="196" y="150" width="14" height="12" fill="#1b1029"/>'+
+    '<circle cx="60" cy="142" r="10" fill="#1b1029"/><path d="M50 142 q10 -12 20 0 z" fill="#1b1029"/>'+
+    '<rect x="320" y="140" width="110" height="62" rx="6" fill="#1b1029"/><rect x="330" y="128" width="90" height="10" rx="3" fill="#1b1029"/>';
+  } else if(w==="w2"){
+    inner='<rect x="60" y="168" width="90" height="34" rx="5" fill="#1b1029"/><rect x="200" y="168" width="90" height="34" rx="5" fill="#1b1029"/>'+
+    '<rect x="340" y="168" width="90" height="34" rx="5" fill="#1b1029"/>'+
+    '<path d="M245 130 q14 -20 28 0 l-4 10 -20 0 z" fill="#241636" stroke="'+A+'" stroke-width="1.5"/>'+
+    '<circle cx="180" cy="140" r="7" fill="none" stroke="'+A+'" stroke-width="1.5" opacity=".7"/>'+
+    '<circle cx="300" cy="126" r="5" fill="none" stroke="'+A+'" stroke-width="1.5" opacity=".7"/>';
+  } else if(w==="w3"){
+    var sh=""; for(var i=0;i<4;i++){ var x=52+i*106; sh+='<rect x="'+x+'" y="118" width="88" height="8" rx="2" fill="#1b1029"/><rect x="'+x+'" y="134" width="88" height="8" rx="2" fill="#1b1029"/>'+
+      '<rect x="'+(x+6)+'" y="112" width="12" height="6" fill="#241636" opacity=".9"/><rect x="'+(x+30)+'" y="128" width="16" height="6" fill="#241636" opacity=".9"/>'; }
+    inner=sh+'<circle cx="240" cy="176" r="11" fill="'+A+'" opacity=".25" class="flicker"/><path d="M228 168 l24 -14" stroke="'+A+'" stroke-width="2"/>';
+  } else if(w==="w4"){
+    var lan=""; for(var i=0;i<9;i++){ var lx=50+i*46, ly=96+((i*37)%3)*16;
+      lan+='<line x1="'+lx+'" y1="60" x2="'+lx+'" y2="'+ly+'" stroke="#4d3570" stroke-width="1.5"/>'+
+      '<rect x="'+(lx-8)+'" y="'+ly+'" width="16" height="18" rx="4" fill="#241636" stroke="'+A+'" stroke-width="1.4"/>'+
+      '<circle cx="'+lx+'" cy="'+(ly+9)+'" r="3" fill="'+A+'" class="flicker"/>'; }
+    inner=lan;
+  } else if(w==="w5"){
+    inner='<rect x="50" y="150" width="80" height="52" rx="3" fill="#1b1029"/>'+
+    '<rect x="140" y="150" width="80" height="52" rx="3" fill="#1b1029"/><rect x="95" y="112" width="80" height="38" rx="3" fill="#20132f"/>'+
+    '<rect x="300" y="132" width="86" height="70" rx="3" fill="#1b1029"/><rect x="318" y="98" width="86" height="34" rx="3" fill="#20132f"/>'+
+    '<path d="M40 208 q60 -26 120 0 t120 0 t120 0" fill="none" stroke="#4d3570" stroke-width="2" stroke-dasharray="6 5"/>';
+  } else if(w==="w6"){
+    inner='<g opacity=".8">'+
+    '<circle cx="140" cy="140" r="13" fill="#cfc4de"/><rect x="127" y="152" width="26" height="34" rx="8" fill="#cfc4de"/>'+
+    '<circle cx="330" cy="144" r="13" fill="#cfc4de"/><rect x="317" y="156" width="26" height="30" rx="8" fill="#cfc4de"/>'+
+    '<rect x="220" y="176" width="120" height="10" rx="4" fill="#1b1029"/></g>';
+  } else if(w==="w7"){
+    inner='<path d="M40 202 q60 -44 120 -6 q70 -40 130 -2 q60 -36 130 4 l0 4 -380 0 z" fill="#171021"/>'+
+    '<circle cx="380" cy="150" r="10" fill="#e07856" opacity=".3" class="flicker"/>'+
+    '<path d="M30 90 q30 -8 44 8 M60 70 q30 -8 44 8" stroke="#4d3570" stroke-width="2" fill="none" opacity=".7"/>';
+  } else if(w==="wf"){
+    inner='<rect x="60" y="96" width="200" height="104" rx="8" fill="#1b1029"/>'+
+    '<rect x="92" y="128" width="76" height="52" rx="4" fill="#3a1408" stroke="#ff9e5e" stroke-width="2"/>'+
+    '<path d="M96 176 q14 -34 34 -40 q20 12 34 40 z" fill="#ff9e5e" opacity=".8" class="flicker"/>'+
+    '<circle cx="230" cy="120" r="9" fill="none" stroke="#ff9e5e" stroke-width="2"/><line x1="230" y1="111" x2="230" y2="128" stroke="#ff9e5e" stroke-width="2"/>'+
+    '<line x1="224" y1="120" x2="236" y2="120" stroke="#ff9e5e" stroke-width="2"/>'+
+    '<rect x="320" y="120" width="90" height="80" rx="6" fill="#20132f"/>';
+  }
+  var doorOrn = (w==="wf") ? "" : '<rect x="452" y="120" width="16" height="80" rx="3" fill="#1b1029" stroke="#4d3570"/>';
+  return '<svg viewBox="0 0 480 240" role="img" aria-hidden="true">'+windowSVG(A)+inner+doorOrn+'</svg>';
+}
+function foeSVG(k){
+  var A="#d9a441";
+  if(k==="wisp"){
+    return '<svg viewBox="0 0 100 100"><g class="flicker">'+
+    '<path d="M30 62 q0 -34 20 -34 q20 0 20 34 q-6 12 -12 4 q-4 10 -8 2 q-4 10 -8 0 q-4 8 -12 -6 z" fill="#8f7fae" opacity=".9"/>'+
+    '<circle cx="42" cy="44" r="3.2" fill="#241636"/><circle cx="58" cy="44" r="3.2" fill="#241636"/>'+
+    '<circle cx="34" cy="36" r="1.6" fill="#f2e8d5" opacity=".8"/><circle cx="66" cy="30" r="1.3" fill="#f2e8d5" opacity=".7"/></g></svg>';
+  }
+  if(k==="trunk"){
+    return '<svg viewBox="0 0 100 100">'+
+    '<rect x="20" y="34" width="60" height="42" rx="5" fill="#6b4326" stroke="#3e2716" stroke-width="3"/>'+
+    '<rect x="20" y="26" width="60" height="16" rx="5" fill="#7d5030" stroke="#3e2716" stroke-width="3"/>'+
+    '<path d="M34 42 l6 8 l6 -8 l6 8 l6 -8 l6 8 l6 -8" fill="none" stroke="#f2e8d5" stroke-width="2.4"/>'+
+    '<circle cx="50" cy="30" r="3" fill="'+A+'"/>'+
+    '<rect x="16" y="40" width="8" height="30" rx="3" fill="'+A+'" opacity=".85"/><rect x="76" y="40" width="8" height="30" rx="3" fill="'+A+'" opacity=".85"/>'+
+    '<line x1="50" y1="26" x2="50" y2="16" stroke="#3e2716" stroke-width="3"/></svg>';
+  }
+  if(k==="conductor"||k==="conductorElite"){
+    var cap=k==="conductorElite"?"#c9cbd6":"#2a2140";
+    return '<svg viewBox="0 0 100 100">'+
+    '<rect x="36" y="38" width="28" height="44" rx="8" fill="#2a2140"/>'+
+    '<circle cx="50" cy="30" r="12" fill="#3a2c55"/>'+
+    '<ellipse cx="50" cy="31" rx="7.5" ry="9" fill="#d9cfe8" opacity=".55"/>'+
+    '<path d="M34 24 q16 -12 32 0 l2 4 -36 0 z" fill="'+cap+'" stroke="'+A+'" stroke-width="1.2"/>'+
+    '<circle cx="50" cy="18" r="2.6" fill="'+A+'"/>'+
+    '<rect x="30" y="52" width="40" height="7" rx="3" fill="'+A+'" opacity=".8"/>'+
+    '<line x1="68" y1="46" x2="80" y2="70" stroke="#241636" stroke-width="4"/>'+
+    '<circle cx="81" cy="74" r="5.5" fill="#ffdf9e" class="flicker"/></svg>';
+  }
+  if(k==="engineerP1"||k==="engineerP2"){
+    var fire=k==="engineerP2";
+    return '<svg viewBox="0 0 100 100">'+
+    '<rect x="34" y="36" width="32" height="46" rx="8" fill="#241a33" stroke="#4d3570" stroke-width="1.5"/>'+
+    '<circle cx="50" cy="28" r="12" fill="#2e2144"/>'+
+    '<rect x="41" y="24" width="18" height="8" rx="4" fill="#ff9e5e" opacity="'+(fire?"0.95":"0.7")+'" class="flicker"/>'+
+    '<path d="M40 22 q10 -10 20 0 l0 -4 q-10 -8 -20 0 z" fill="#1b1029"/>'+
+    (fire?'<circle cx="50" cy="60" r="7" fill="#ff9e5e" opacity=".85" class="flicker"/>':'<path d="M28 66 l26 -10 l2 5 l-26 10 z" fill="#6b4326"/>')+
+    '</svg>';
+  }
+  return '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#8f7fae"/></svg>';
+}
+function travelerSVG(){
+  return '<svg viewBox="0 0 100 100" class="port">'+
+  '<rect x="38" y="40" width="26" height="42" rx="8" fill="#4a2d68" stroke="#d9a441" stroke-width="1.4"/>'+
+  '<circle cx="51" cy="30" r="11" fill="#d9cfe8"/>'+
+  '<path d="M40 26 q11 -10 22 0 l1 -8 q-12 -8 -24 0 z" fill="#2a2140"/>'+
+  '<line x1="64" y1="46" x2="74" y2="70" stroke="#4a2d68" stroke-width="4"/>'+
+  '<circle cx="76" cy="75" r="6" fill="#ffdf9e" class="flicker"/>'+
+  '<circle cx="76" cy="75" r="11" fill="#ffdf9e" opacity=".18" class="flicker"/></svg>';
+}
+function titleTrainSVG(){
+  var windows="";
+  for(var i=0;i<7;i++){ var x=118+i*44;
+    windows+='<rect x="'+x+'" y="118" width="26" height="22" rx="4" fill="#ffdf9e" opacity="'+(0.55+((i*29)%40)/100)+'" class="flicker"/>'; }
+  return '<svg viewBox="0 0 480 210" style="width:min(480px,92%);display:block;margin:6px auto 0">'+
+  stars(52,480,110,"starsA",5)+stars(24,480,80,"starsB",55)+
+  '<circle cx="408" cy="34" r="15" fill="#f2e8d5" opacity=".9"/>'+
+  '<rect x="108" y="112" width="330" height="34" rx="8" fill="#2a1b3d" stroke="#4d3570" stroke-width="2"/>'+
+  windows+
+  '<rect x="60" y="104" width="52" height="42" rx="7" fill="#33204d" stroke="#4d3570" stroke-width="2"/>'+
+  '<circle cx="86" cy="86" r="18" fill="#33204d" stroke="#4d3570" stroke-width="2"/>'+
+  '<circle cx="80" cy="82" r="5" fill="#ffdf9e" class="flicker"/>'+
+  '<rect x="352" y="92" width="10" height="22" fill="#33204d"/>'+
+  '<circle cx="128" cy="150" r="12" fill="#171021" stroke="#6b5590" stroke-width="2"/>'+
+  '<circle cx="196" cy="150" r="12" fill="#171021" stroke="#6b5590" stroke-width="2"/>'+
+  '<circle cx="330" cy="150" r="12" fill="#171021" stroke="#6b5590" stroke-width="2"/>'+
+  '<rect x="40" y="160" width="400" height="4" rx="2" fill="#4d3570"/>'+
+  '<rect x="56" y="164" width="368" height="3" rx="1.5" fill="#3a2456"/></svg>';
+}
+function doorSVG(n){
+  return '<svg viewBox="0 0 200 240" class="doorOrn">'+
+  '<rect x="58" y="18" width="84" height="204" rx="10" fill="#2a1b3d" stroke="#d9a441" stroke-width="3"/>'+
+  '<rect x="66" y="26" width="68" height="188" rx="7" fill="none" stroke="#4d3570" stroke-width="1.5"/>'+
+  '<circle cx="100" cy="124" r="26" fill="none" stroke="#d9a441" stroke-width="1.5" opacity=".7"/>'+
+  '<text x="100" y="134" text-anchor="middle" font-size="30" fill="#f0c96b" font-family="Georgia,serif">'+["I","II","III","IV","V","VI","VII"][n-1]+'</text>'+
+  '<circle cx="132" cy="120" r="4" fill="#f0c96b"/>'+
+  '</svg>';
+}
+
+/* ---------- rendering ---------- */
+var elStage, elHdr, elBrand, elHbtns, elHow;
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function T(k,p){ return TrainCore.T(k,p); }
+
+function renderHeader(){
+  elBrand.innerHTML="<b>"+esc(T("ui.title"))+"</b>";
+  var langs="";
+  TrainCore.langs.forEach(function(l){
+    langs+='<button class="hbtn'+(UI.lang===l?" on":"")+'" data-act="lang" data-v="'+l+'">'+l.toUpperCase()+'</button>';
+  });
+  elHbtns.innerHTML=langs+
+    '<button class="hbtn'+(UI.sound?" on":"")+'" data-act="sound">'+esc(T("ui.sound"))+'</button>'+
+    '<button class="hbtn" data-act="how">'+esc(T("ui.rules"))+"</button>";
+}
+function kindChip(kind){
+  if(!kind) return "";
+  var k=kind==="combat"?"kind.combat":(kind==="encounter"?"kind.encounter":"kind.resource");
+  return '<span class="kchip" style="color:var(--accent)">'+esc(T(k))+"</span>";
+}
+function optionButton(o,ctx){
+  var l=o.l?T(o.l):(o.item?T("it."+o.item+".n"):"");
+  var h=o.h?T(o.h):(o.item?T("it."+o.item+".d"):"");
+  var chip=kindChip(o.kind);
+  if(ctx==="upgrade"){ h=T("up."+o.id+".d"); l=T("up."+o.id+".n"); }
+  return '<button class="choice" data-act="choose" data-v="'+o.id+'">'+chip+
+    '<span class="cl">'+esc(l)+"</span>"+
+    '<span class="ch">'+h+"</span></button>";
+}
+function statsBar(){
+  var s=TrainCore.state(); if(!s) return "";
+  var out='<div id="invbar"><span class="ilbl">'+esc(T("ui.inventory"))+"</span>";
+  var any=false;
+  ["tart","tea"].forEach(function(id){ var n=s.inv[id]||0; if(n>0){ any=true;
+    out+='<span class="item'+(s.combat||id==="tart"?" use":"")+'" data-act="itemout" data-v="'+id+'" title="'+esc(T("it."+id+".d"))+'">'+esc(T("it."+id+".n"))+' <span class="n">×'+n+"</span></span>"; }});
+  ["ticket","lantern","star","key"].forEach(function(id){ if(s.passives[id]){ any=true;
+    out+='<span class="item pas" title="'+esc(T("it."+id+".d"))+'">✦ '+esc(T("it."+id+".n"))+"</span>"; }});
+  if(!any) out+='<span class="item pas">'+esc(T("ui.empty"))+"</span>";
+  out+="</div>";
+  return out;
+}
+function render(){
+  var v=TrainCore.view();
+  if(!v){ renderTitle(); return; }
+  renderHeader();
+  var stage=TrainCore.state();
+  var wagon=stage?STAGE_W(stage.stage):"w1";
+  document.getElementById("app").style.setProperty("--accent", ACCENTS[wagon]);
+  switch(v.type){
+    case "title": renderTitle(); break;
+    case "story": renderStory(v); break;
+    case "branch": case "choice": renderChoice(v); break;
+    case "reward": renderReward(v); break;
+    case "upgrade": renderUpgrade(v); break;
+    case "gains": renderGains(v); break;
+    case "door": renderDoor(v); break;
+    case "combat": renderCombat(v); break;
+    case "gameover": renderGameover(v); break;
+    case "ending": renderEnding(v); break;
+    default: renderTitle();
+  }
+  if(stage && !stage.over && v.type!=="title") persist();
+}
+function STAGE_W(i){ return TrainCore.stages[i].wagon; }
+var ACCENTS={w1:"#7fa8d9",w2:"#e0a458",w3:"#7fc9a8",w4:"#ffd97a",w5:"#c98a5a",w6:"#b9a8c9",w7:"#e07856",wf:"#ff9e5e"};
+
+function renderTitle(){
+  renderHeader();
+  document.getElementById("app").style.setProperty("--accent","#d9a441");
+  var end1=UI.meta.endings&&UI.meta.endings.fire, end2=UI.meta.endings&&UI.meta.endings.dawn;
+  elStage.innerHTML='<div class="panel">'+
+    '<div class="scene">'+titleTrainSVG()+"</div>"+
+    '<div id="title">'+
+      '<div class="gtitle">'+esc(T("ui.title"))+"</div>"+
+      '<div class="gsub">'+esc(T("ui.tagline"))+"</div>"+
+      '<div class="endstars">'+esc(T("ui.endings"))+
+        ' <span class="'+(end1?"got":"")+'">🔥 '+esc(T("f.fire.l"))+"</span>"+
+        '<span class="'+(end2?"got":"")+'">🌤 '+esc(T("f.dawn.l"))+"</span></div>"+
+      '<div class="btnrow" style="justify-content:center">'+
+        '<button class="btn big pulse" data-act="new">'+esc(T("ui.new"))+"</button>"+
+        (UI.hasSave?'<button class="btn big ghost" data-act="cont">'+esc(T("ui.continue"))+"</button>":"")+
+      "</div>"+
+      '<div class="credit">'+esc(T("ui.made"))+"</div>"+
+    "</div></div>";
+}
+function renderStory(v){
+  var w=STAGE_W(v.stage);
+  var s=TrainCore.state();
+  var idx=Math.min(s.pageIdx||0, v.pages.length-1);
+  var tag = v.stage<7 ? esc(T("ui.wagon",{n:v.stage+1, w:T(TrainCore.stages[v.stage].wagon)})) : esc(T("wf"));
+  elStage.innerHTML='<div class="panel">'+
+    '<div class="scene">'+sceneSVG(w)+"</div>"+
+    '<div class="card">'+
+      '<span class="wagonTag">'+tag+"</span>"+
+      '<div class="prose">'+T(v.pages[idx])+"</div>"+
+      '<div class="btnrow"><button class="btn" data-act="choose" data-v="next">'+esc(T("ui.next"))+" ›</button></div>"+
+    "</div></div>";
+}
+function renderChoice(v){
+  var w=STAGE_W(v.stage);
+  var tag = v.stage<7 ? esc(T("ui.wagon",{n:v.stage+1, w:T(TrainCore.stages[v.stage].wagon)})) : esc(T("wf"));
+  var q = v.cat ? "" : (v.q?'<div class="prose">'+T(v.q)+"</div>":"");
+  var opts=v.options.map(function(o){ return optionButton(o, v.cat?"cat":"choice"); }).join("");
+  elStage.innerHTML='<div class="panel">'+
+    '<div class="scene">'+sceneSVG(w)+"</div>"+
+    '<div class="card">'+
+      '<span class="wagonTag">'+tag+"</span>"+
+      q+opts+
+    "</div></div>";
+}
+function renderReward(v){
+  var w=STAGE_W(v.stage);
+  var opts=v.options.map(function(o){
+    return '<button class="choice" data-act="choose" data-v="'+o.id+'">'+
+      '<span class="cl">✦ '+esc(T("it."+o.item+".n"))+"</span>"+
+      '<span class="ch">'+esc(T("it."+o.item+".d"))+"</span></button>";
+  }).join("");
+  elStage.innerHTML='<div class="panel">'+
+    '<div class="scene">'+sceneSVG(w)+"</div>"+
+    '<div class="card">'+
+      '<div class="prose">'+esc(T(v.q))+"</div>"+opts+
+    "</div></div>";
+}
+function renderUpgrade(v){
+  var w=STAGE_W(v.stage);
+  var opts=v.options.map(function(o){ return optionButton(o,"upgrade"); }).join("");
+  elStage.innerHTML='<div class="panel">'+
+    '<div class="scene">'+sceneSVG(w)+"</div>"+
+    '<div class="card">'+
+      '<span class="wagonTag">'+esc(T("ui.wagon",{n:v.stage+1,w:T(TrainCore.stages[v.stage].wagon)}))+"</span>"+
+      '<div class="prose">'+esc(T("up.q"))+"</div>"+opts+
+    "</div></div>";
+}
+function renderGains(v){
+  var w=STAGE_W(v.stage);
+  var s=TrainCore.state();
+  var lis=(v.gains||[]).map(function(g){
+    var cls=g[2]==="cost"?"cost":"";
+    return '<li class="'+cls+'">'+esc(T(g[0],g[1]))+"</li>";
+  }).join("");
+  var title=v.win?'<div class="prose" style="color:var(--gold2)">✦ '+esc(T("ui.victory"))+"</div>":"";
+  var lead=v.lead?'<div class="prose">'+T(v.lead)+"</div>":"";
+  elStage.innerHTML='<div class="panel">'+
+    '<div class="scene">'+sceneSVG(w)+"</div>"+
+    '<div class="card">'+
+      title+lead+'<ul class="gains">'+lis+"</ul>"+
+      '<div class="btnrow"><button class="btn" data-act="choose" data-v="ok">'+esc(T("ui.ok"))+" ›</button></div>"+
+    "</div></div>"+ (s && !s.combat ? statsBar() : "");
+}
+function renderDoor(v){
+  var next=TrainCore.stages[Math.min(v.stage+1,TrainCore.stages.length-1)];
+  elStage.innerHTML='<div class="panel"><div class="doorwrap">'+
+    doorSVG(v.n)+
+    '<div class="doorNum">'+esc(T("door.of",{n:["I","II","III","IV","V","VI","VII"][v.n-1]}))+"</div>"+
+    '<div class="doorSub">'+esc(T("door.next",{w:T(next.wagon)}))+"</div>"+
+    '<div class="btnrow" style="justify-content:center"><button class="btn big" data-act="choose" data-v="open">'+esc(T("ui.open"))+"</button></div>"+
+  "</div></div>";
+}
+function intentHTML(it){
+  var name=T(it.k);
+  if(it.t==="charge") return '<span class="intent chg">▲ '+esc(name)+" — "+esc(T("intent.charge",{v:it.v}))+"</span>";
+  if(it.t==="block") return '<span class="intent blk">◈ '+esc(name)+" · "+esc(T("intent.block"))+"</span>";
+  if(it.t==="drain"){
+    var s=(it.v>0? esc(name)+" "+it.v+" · ":"")+esc(T("intent.drain",{v:it.d}));
+    return '<span class="intent">'+s+"</span>";
+  }
+  return '<span class="intent">⚔ '+esc(name)+" <span class='iv'>"+it.v+"</span></span>";
+}
+function renderCombat(v){
+  var s=TrainCore.state();
+  var alive=v.enemies.filter(function(e){return e.hp>0;});
+  if(UI.target>=v.enemies.length || v.enemies[UI.target].hp<=0){
+    var first=alive[0]; UI.target = first ? first.i : 0;
+  }
+  var foes=v.enemies.map(function(e){
+    var dead=e.hp<=0;
+    var sel=(!dead && e.i===UI.target)?" target":"";
+    var last=S_lastHit===e.i && !dead ? '<span class="dmgfloat">'+ (S_lastDmg>0?("-"+S_lastDmg):"") +"</span>":"";
+    var block=e.block>0?'<span class="eblock">◈ '+e.block+"</span>":"";
+    return '<div class="foe'+(dead?" dead":sel)+'" data-act="target" data-v="'+e.i+'">'+block+last+
+      '<div class="fname">'+esc(T("en."+e.k))+"</div>"+
+      foeSVG(e.k)+
+      '<div class="hpbar"><i style="width:'+Math.max(0,e.hp/e.maxHp*100)+'%"></i></div>'+
+      (dead?"":intentHTML(e.intent))+
+      "</div>";
+  }).join("");
+  var pips="", n=v.you.maxEn;
+  if(n<=20){ for(var i=1;i<=n;i++){ pips+='<span class="pip'+(i<=v.you.en?" on":"")+(i===v.you.en+1?" next":"")+'"></span>'; } }
+  var spips="";
+  if(s.passives.star){ var c=v.you.strikes%3; for(var j=0;j<3;j++){ spips+='<i class="'+(j<c?"on":"")+'"></i>'; } spips='<span class="starpips" title="'+esc(T("it.star.d"))+'">'+spips+"</span>"; }
+  var cost=v.actions.cost;
+  var items="";
+  if(v.items.tart) items+='<button class="abtn alt" data-act="citem" data-v="tart">'+esc(T("it.tart.n"))+"<small>+12</small></button>";
+  if(v.items.tea) items+='<button class="abtn alt" data-act="citem" data-v="tea">'+esc(T("it.tea.n"))+"<small>+6 ⚡</small></button>";
+  var log=(v.log||[]).map(function(l){ return '<div class="'+(l.cls||"")+'">'+T(l.k,l.p)+"</div>"; }).join("");
+  var tip=v.tip?'<div class="prose" style="font-size:13.5px;color:var(--gold2);margin:0 14px 10px">☞ '+esc(T(v.tip))+"</div>":"";
+  var shake=S_playerHit?" shake":"";
+  elStage.innerHTML='<div class="panel" id="combat">'+
+    '<div class="enemyrow">'+foes+"</div>"+
+    tip+
+    '<div id="log">'+log+"</div>"+
+    '<div class="you'+shake+'">'+
+      travelerSVG()+
+      '<div class="bars">'+
+        '<div class="statline"><span class="lbl">'+esc(T("ui.hp"))+'</span><div class="bar hp"><i style="width:'+Math.max(0,v.you.hp/v.you.maxHp*100)+'%"></i></div><span class="val">'+v.you.hp+"/"+v.you.maxHp+"</span></div>"+
+        '<div class="statline"><span class="lbl">'+esc(T("ui.energy"))+'</span><div class="bar en"><i style="width:'+(v.you.en/v.you.maxEn*100)+'%"></i></div><span class="val">'+v.you.en+"/"+v.you.maxEn+"</span>"+(v.you.block>0?' <span class="shieldchip">'+esc(T("ui.shield",{v:v.you.block}))+"</span>":"")+spips+"</div>"+
+      "</div>"+
+      (alive.length>1?'<div style="font-size:11.5px;color:var(--muted)">'+esc(T("ui.aim"))+"</div>":"")+
+    "</div>"+
+    statsBar()+
+    '<div id="actions">'+
+      '<button class="abtn" data-act="cact" data-v="strike">'+esc(T("act.strike"))+"<small>"+(5+(TrainCore.state().ups.blade?2:0))+"–"+(7+(TrainCore.state().ups.blade?2:0))+"</small></button>"+
+      '<button class="abtn" data-act="cact" data-v="guard">'+esc(T("act.guard"))+"<small>+2 ⚡</small></button>"+
+      '<button class="abtn" data-act="cact" data-v="ability"'+(v.actions.ability?"":" disabled")+'>'+esc(T("act.ability"))+"<small>"+esc(T("c.cost",{v:cost}))+"</small></button>"+
+      items+
+    "</div></div>";
+}
+var S_lastHit=-1, S_lastDmg=0, S_playerHit=false;
+function renderGameover(v){
+  elStage.innerHTML='<div class="panel"><div class="endwrap">'+
+    '<div class="endtitle">'+esc(T("go.t"))+"</div>"+
+    '<div class="prose" style="max-width:560px;margin:0 auto">'+T("go.p")+"</div>"+
+    '<div class="btnrow" style="justify-content:center">'+
+      '<button class="btn big" data-act="retry">'+esc(T("ui.retry"))+"</button>"+
+      '<button class="btn big ghost" data-act="abandon">'+esc(T("ui.abandon"))+"</button>"+
+    "</div></div></div>";
+  snd("lose");
+}
+function renderEnding(v){
+  elStage.innerHTML='<div class="panel"><div class="scene">'+sceneSVG(v.which==="fire"?"wf":"w7")+'</div>'+
+    '<div class="endwrap">'+
+    '<div class="endtitle">'+esc(v.title)+"</div>"+
+    '<div class="endcols">'+v.paras.map(function(p){ return '<p class="prose">'+p+"</p>"; }).join("")+"</div>"+
+    '<div class="stats">'+
+      '<span class="stat">'+esc(T("stats.combats"))+" <b>"+v.stats.combats+"</b></span>"+
+      '<span class="stat">'+esc(T("stats.turns"))+" <b>"+v.stats.turns+"</b></span>"+
+      '<span class="stat">'+esc(T("stats.dmg"))+" <b>"+v.stats.dmg+"</b></span>"+
+      '<span class="stat">'+esc(T("stats.doors"))+" <b>"+v.stats.doors+"/7</b></span>"+
+      '<span class="stat">'+esc(T("stats.items"))+" <b>"+v.stats.items+"</b></span>"+
+    "</div>"+
+    '<div class="btnrow" style="justify-content:center"><button class="btn big" data-act="replay">'+esc(T("ui.replay"))+"</button></div>"+
+    "</div></div>";
+  snd("end");
+}
+
+/* ---------- persist ---------- */
+function persist(){
+  var d=TrainCore.save();
+  if(d){ st(UI.KEY_SAVE,d); UI.hasSave=true; }
+}
+function loadMeta(){
+  try{ var m=JSON.parse(st(UI.KEY_META)||"{}"); UI.meta=m; }catch(e){ UI.meta={endings:{}}; }
+  if(!UI.meta.endings) UI.meta.endings={};
+}
+TrainCore.onEnding=function(which){
+  UI.meta.endings[which]=true;
+  try{ st(UI.KEY_META, JSON.stringify(UI.meta)); }catch(e){}
+  try{ st(UI.KEY_SAVE, null); }catch(e){}
+  UI.hasSave=false;
+};
+
+/* ---------- events ---------- */
+function onAction(act, v, btn){
+  auInit();
+  switch(act){
+    case "new": snd("click"); TrainCore.setLang(UI.lang); TrainCore.newRun(); UI.target=0; S_lastHit=-1; break;
+    case "cont": snd("click"); { var d=st(UI.KEY_SAVE); if(d && TrainCore.load(d)){ /* ok */ } } break;
+    case "choose":
+      snd("click");
+      var before=TrainCore.view();
+      TrainCore.choose(v);
+      var after=TrainCore.view();
+      if(after.type==="combat" && before.type!=="combat"){ snd("door"); }
+      if(after.type==="door" && before.type!=="door"){ snd("door"); }
+      break;
+    case "target": UI.target=parseInt(v,10)||0; snd("click"); break;
+    case "cact":
+      S_lastHit=-1; S_lastDmg=0; S_playerHit=false;
+      var s0=TrainCore.state();
+      if(v==="strike") snd("hit");
+      if(v==="ability") snd("ability");
+      if(v==="guard") snd("guard");
+      var t=UI.target;
+      var eBefore=s0 && s0.combat ? s0.combat.list[t] : null;
+      TrainCore.act(v, t);
+      var s1=TrainCore.state();
+      if(eBefore && s1.combat){
+        var eAfter=s1.combat.list[t];
+        if(eAfter && eAfter.hp<eBefore.hp){ S_lastHit=t; S_lastDmg=eBefore.hp-eAfter.hp; }
+      }
+      if(s1.hp<s0.hp) { S_playerHit=true; snd("ehit"); }
+      else if(s1.en<s0.en && v!=="ability") snd("drain");
+      break;
+    case "citem": snd("item"); TrainCore.act("item", UI.target, v); break;
+    case "itemout": snd("item"); TrainCore.useItemOut(v); break;
+    case "retry": snd("click"); TrainCore.retryStage(); break;
+    case "abandon": snd("click"); TrainCore.abandon(); try{st(UI.KEY_SAVE,null);}catch(e){} UI.hasSave=false; break;
+    case "replay": snd("click"); TrainCore.setLang(UI.lang); TrainCore.newRun(); UI.target=0; break;
+    case "lang":
+      UI.lang=v; st(UI.KEY_LANG,v); TrainCore.setLang(v); snd("click"); renderHeader(); render(); break;
+    case "sound": UI.sound=!UI.sound; st(UI.KEY_SOUND,UI.sound?"1":"0"); snd("click"); renderHeader(); break;
+    case "how": snd("click"); showHow(); break;
+    case "closehow": snd("click"); elHow.classList.add("hidden"); break;
+  }
+  render();
+}
+function showHow(){
+  var lis="";
+  for(var i=1;i<=6;i++){ lis+="<li>"+T("how."+i)+"</li>"; }
+  elHow.innerHTML='<div class="panel"><div class="card">'+
+    '<div class="endtitle" style="font-size:22px">'+esc(T("how.title"))+"</div>"+
+    "<ol>"+lis+"</ol>"+
+    '<div class="btnrow" style="justify-content:center"><button class="btn" data-act="closehow">'+esc(T("ui.next"))+"</button></div>"+
+    "</div></div>";
+  elHow.classList.remove("hidden");
+}
+document.addEventListener("click", function(ev){
+  var el=ev.target;
+  while(el && el!==document){ 
+    if(el.dataset && el.dataset.act){ onAction(el.dataset.act, el.dataset.v, el); return; }
+    el=el.parentNode;
+  }
+});
+document.addEventListener("keydown", function(ev){
+  var v=TrainCore.view(); if(!v) return;
+  if(ev.key==="Enter"||ev.key===" "){
+    var main=elStage.querySelector(".btn, .choice");
+    if(main){ ev.preventDefault(); main.click(); }
+  }
+  if(v.type==="combat"){
+    var btns=elStage.querySelectorAll("#actions .abtn");
+    var map={"1":0,"2":1,"3":2,"4":3};
+    if(map[ev.key]!==undefined && btns[map[ev.key]]){ ev.preventDefault(); btns[map[ev.key]].click(); }
+    if(ev.key==="q"||ev.key==="a"){ var t=elStage.querySelectorAll(".foe"); var i=(UI.target+1)%v.enemies.length; if(t[i]) t[i].click(); }
+  }
+});
+
+/* ---------- boot ---------- */
+function boot(){
+  elStage=document.getElementById("stage");
+  elHdr=document.getElementById("hdr");
+  elBrand=document.getElementById("brand");
+  elHbtns=document.getElementById("hbtns");
+  elHow=document.getElementById("howto");
+  UI.lang=st(UI.KEY_LANG)|| (navigator.language||"en").slice(0,2);
+  if(TrainCore.langs.indexOf(UI.lang)<0) UI.lang="en";
+  UI.sound=st(UI.KEY_SOUND)!=="0";
+  loadMeta();
+  UI.hasSave=!!st(UI.KEY_SAVE);
+  TrainCore.setLang(UI.lang);
+  TrainCore.newRun(Date.now()>>>0);
+  TrainCore.toTitle();
+  render();
+}
+boot();
+
+/* debug/QA hook */
+window.__train={
+  core:TrainCore, ui:UI,
+  state:function(){ return TrainCore.state(); },
+  view:function(){ return TrainCore.view(); },
+  render:render,
+  setLang:function(l){ UI.lang=l; TrainCore.setLang(l); renderHeader(); render(); }
+};
+})();
+</script>
+</body>
+</html>

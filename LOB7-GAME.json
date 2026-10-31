@@ -1,0 +1,11 @@
+{
+  "title": "The Train of Seven Doors",
+  "description": "Wake in a velvet seat under a window full of stars. Cross seven fairy-tale carriages — fights with telegraphed intents, strange encounters, supplies — reach the midnight locomotive, and decide what the fire becomes. A 10-15 minute adventure with two endings, in English, French and Spanish.",
+  "entrypoint": "index.html",
+  "license": "MIT",
+  "genre": ["adventure", "rpg"],
+  "themes": ["train", "fairy tale", "turn-based combat"],
+  "controls": ["Click or tap: choose actions and targets", "Enter: confirm", "1-4: action shortcuts"],
+  "credits": ["Concept: Cédric Bernadac", "Game made by Z Code (AI agent), with a balance consult from Kimi K3.1 Pro"],
+  "cover": "cover.png"
+}

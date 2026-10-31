@@ -1,0 +1,39 @@
+{
+  "mission": "Le Train des sept portes — mission ponctuelle du 31/10/2026 (chat, ~23h20). Créer le jeu dans games/train-sept-portes/, préserver les autres jeux et les tâches planifiées.",
+  "spec": {
+    "concept": "Aventure courte en 7 wagons : rencontres, choix, créatures étranges ; atteindre la locomotive pour comprendre le voyage.",
+    "regles": [
+      "7 étapes ; embranchements combat / rencontre / ressource",
+      "PV, énergie, petit inventaire",
+      "combats tour par tour : frapper, se protéger, capacité (énergie)",
+      "intention de l'ennemi annoncée avant le choix",
+      "objets et récompenses modifient les décisions",
+      "amélioration 1 parmi 2 après certaines étapes",
+      "confrontation finale, 2 fins selon un choix significatif"
+    ],
+    "versionInitiale": "1 personnage jouable, 3 types d'ennemis, 1 adversaire final, 6 objets, événements écrits à la main, 2 fins",
+    "directionVisuelle": "train de conte : velours violet, fenêtres étoilées, lanternes dorées, personnages illustrés, ambiance identifiable par wagon",
+    "validation": "combats, effets des objets, accès aux 2 fins, gagnable sans objet trouvé au hasard",
+    "livraison": "EN/FR/ES, tests ciblés, partie réellement terminée, dépôt public, publication LOB7 selon quotas, preuves ici"
+  },
+  "status": "in-progress",
+  "startedAt": "2026-10-31T23:23+01:00",
+  "idempotencyKey": "creation-direct-2026-10-31-train-sept-portes",
+  "lock": "_private/lock-creation-direct-20261031-train",
+  "whoamiPrecheck": "OK 2026-10-31 23:24 CET — Z Code usr_ns4cywae, validations 0/2, imports 0/10, uploads 0/5",
+  "scheduledTasksIntact": "CronList vérifié 23:21 CET : automation 9h (improvement) + 14h30 (creation) actives, non modifiées",
+  "art": {
+    "famille": "Train de conte (consigne explicite de la mission) : velours violet profond chaud + or lanterne — dérogation documentée à l'interdit par défaut « nuit indigo/néon » (artDirection : « sauf demande explicite ») : rendu conte enflammé (aplats, or mat, lueurs chaudes), pas de néons froids du gabarit site.",
+    "palette": {
+      "velvet0": "#241636",
+      "velvet1": "#2e1c46",
+      "velvet2": "#3a2456",
+      "gold": "#d9a441",
+      "goldLight": "#f0c96b",
+      "parchment": "#f2e8d5",
+      "accentParWagon": "w1 bleu étoile, w2 ambre, w3 vert lampe, w4 or, w5 rouille, w6 lilas pâle, w7 braise, finale feu"
+    }
+  },
+  "progress": [],
+  "proofs": {}
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "contributions": [
+    {
+      "name": "Cédric Bernadac",
+      "kind": "person",
+      "status": "included",
+      "summary": "Game concept and the detailed mission specification: seven carriages, HP/energy/inventory, turn-based fights with announced intents, fight/encounter/supply forks, one-of-two upgrades, a final confrontation and two endings."
+    },
+    {
+      "name": "Z Code",
+      "kind": "agent",
+      "status": "included",
+      "summary": "Implemented the rules engine and the trilingual interface (EN/FR/ES), wrote the fairy-tale prose, drew the inline SVG wagons and characters, synthesized the audio, balanced the game with seeded simulations, and verified it with headless tests and two full browser playthroughs.",
+      "profileUrl": "https://lob7.com/profiles/usr_ns4cywae"
+    },
+    {
+      "name": "Kimi K3.1 Pro",
+      "kind": "agent",
+      "status": "included",
+      "summary": "One balance consult on the final numbers: found the game too lenient and proposed +4 damage on telegraphed blows; the proposal was simulated, made careful play unwinnable, and was not adopted (details in DELIVERY.md)."
+    }
+  ],
+  "basedOnReleaseIds": []
+}
