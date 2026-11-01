@@ -11,29 +11,89 @@
       "amélioration 1 parmi 2 après certaines étapes",
       "confrontation finale, 2 fins selon un choix significatif"
     ],
-    "versionInitiale": "1 personnage jouable, 3 types d'ennemis, 1 adversaire final, 6 objets, événements écrits à la main, 2 fins",
-    "directionVisuelle": "train de conte : velours violet, fenêtres étoilées, lanternes dorées, personnages illustrés, ambiance identifiable par wagon",
+    "versionInitiale": "1 personnage jouable, 3 types d'ennemis, 1 adversaire final (2 phases), 6 objets, événements écrits à la main, 2 fins",
+    "directionVisuelle": "train de conte : velours violet, fenêtres étoilées, lanternes dorées, personnages illustrés (SVG inline), ambiance identifiable par wagon",
     "validation": "combats, effets des objets, accès aux 2 fins, gagnable sans objet trouvé au hasard",
     "livraison": "EN/FR/ES, tests ciblés, partie réellement terminée, dépôt public, publication LOB7 selon quotas, preuves ici"
   },
-  "status": "in-progress",
+  "status": "published",
   "startedAt": "2026-10-31T23:23+01:00",
+  "closedAt": "2026-11-01T00:35+01:00",
   "idempotencyKey": "creation-direct-2026-10-31-train-sept-portes",
-  "lock": "_private/lock-creation-direct-20261031-train",
-  "whoamiPrecheck": "OK 2026-10-31 23:24 CET — Z Code usr_ns4cywae, validations 0/2, imports 0/10, uploads 0/5",
-  "scheduledTasksIntact": "CronList vérifié 23:21 CET : automation 9h (improvement) + 14h30 (creation) actives, non modifiées",
+  "lock": "_private/lock-creation-direct-20261031-train (levé à la clôture)",
+  "scheduledTasksIntact": "CronList vérifié 31/10 23:21 CET : automation 9h (improvement) + 14h30 (creation) actives, jamais modifiées. Aucun autre jeu touché (musee-endormi etc. ignorés).",
   "art": {
-    "famille": "Train de conte (consigne explicite de la mission) : velours violet profond chaud + or lanterne — dérogation documentée à l'interdit par défaut « nuit indigo/néon » (artDirection : « sauf demande explicite ») : rendu conte enflammé (aplats, or mat, lueurs chaudes), pas de néons froids du gabarit site.",
+    "famille": "Train de conte (consigne explicite de la mission) : velours violet profond chaud + or lanterne. Dérogation documentée à l'interdit par défaut « nuit indigo/néon » (artDirection : « sauf demande explicite ») : rendu conte enflammé (aplats SVG, or mat, lueurs chaudes, Georgia), pas de néons froids du gabarit site.",
     "palette": {
-      "velvet0": "#241636",
-      "velvet1": "#2e1c46",
-      "velvet2": "#3a2456",
-      "gold": "#d9a441",
-      "goldLight": "#f0c96b",
-      "parchment": "#f2e8d5",
-      "accentParWagon": "w1 bleu étoile, w2 ambre, w3 vert lampe, w4 or, w5 rouille, w6 lilas pâle, w7 braise, finale feu"
+      "velvet0": "#241636", "velvet1": "#2e1c46", "velvet2": "#3a2456",
+      "gold": "#d9a441", "goldLight": "#f0c96b", "parchment": "#f2e8d5",
+      "accentParWagon": "w1 bleu étoile #7fa8d9, w2 ambre #e0a458, w3 vert lampe #7fc9a8, w4 or #ffd97a, w5 rouille #c98a5a, w6 lilas pâle #b9a8c9, w7 braise #e07856, finale feu #ff9e5e"
     }
   },
-  "progress": [],
-  "proofs": {}
+  "game": {
+    "name": "The Train of Seven Doors",
+    "noms": { "en": "The Train of Seven Doors", "fr": "Le Train des sept portes", "es": "El tren de las siete puertas" },
+    "mechanic": "Aventure en 7 wagons + locomotive : embranchements combat/rencontre/ressource, combats tour par tour à intentions annoncées (dégâts exacts, coups chargés télégraphiés), frapper/se protéger/éclair de lanterne, énergie+bouclier, 6 objets déterministes (aucun drop aléatoire), 3 paires d'améliorations, boss final 2 phases, 2 fins + éilogue réactif (enfant aidé ou non), défaite → reprise du wagon à 70 % PV.",
+    "stack": "index.html autonome unique (~104 Kio) : train-core (moteur de règles pur, sans DOM) + train-ui (rendu DOM/SVG, WebAudio synthétisé, sauvegarde localStorage try/catch, RNG mulberry32 seedé restauré par la sauvegarde). Zéro dépendance, zéro réseau.",
+    "enemies": "Poussière-vive 8 PV (Bond 4 / Tourbillon 3 + vol 1 énergie) · Malle vorace 22 PV (Croc 6 ×2, charge, Mâchonnement 13) · Contrôleur sans visage 24 PV (Contrôle 3, casquette-bloc 6, charge, Tampon 14) · Inspecteur élite 34 PV (Sifflet, charge, Inspection 18, Tampon 13) · Finale : Chauffeur 28 PV (Pelle 8, charge, Fournaise 18, sifflement) puis Mécanicien 25 PV (charge, Vapeur 20, Piston 10, sifflet brûlant 5+1)."
+  },
+  "tests": {
+    "node": "16/16 (suite dans games/train-sept-portes-dev/tests/train.test.mjs, hors dépôt) : bundle autonome sans refs externes, parité i18n EN/FR/ES (clés + placeholders), nombres de base (frapper 5-7, éclair 10/4 énergie, bouclier 7/+2), télégraphe de la malle, billet −4 contrôleurs uniquement, lanterne +1/tour, étoile chaque 3e coup, tart/thé consomment le tour, clé −8 / premier coup −6 sur la finale, les 6 améliorations, 2 fins accessibles + variance d'éilogue, GAGNABLE SANS AUCUN OBJET sur 25 graines, chemin avide 15 graines, défaite→reprise 70 %, déterminisme à seed égal, aller-retour sauvegarde octet-identique, intégrité du graphe.",
+    "balance": "Sims seedées 3 profils × 60 graines : prudent-chemin-tranquille SANS AUCUN objet 60/60 (≈7 PV restants) ; prudent-chemin-avide (tous les combats optionnels + objets gagnés) 60/60 (≈4 PV — le mode difficile auto-choisi) ; imprudent (ne pare jamais) 43/60, morts en finale — les intentions comptent."
+  },
+  "kimi": {
+    "used": true,
+    "session": "session_ffa9460c-d6e6-4f36-939f-cdb437025523 (31/10, kimi -p)",
+    "verdict": "« Lisible mais trop indulgent » ; proposition : +4 dégâts sur les 5 coups télégraphiés, cibles 50-55/60 en jouant les intentions et ≤25/60 sans parer.",
+    "outcome": "Testée (sim-kimi.mjs, 3 profils × 60 graines × +0/+2/+4) et NON adoptée : +4 rend le jeu ingagnable même en jeu soigné (0/60 partout), +2 effondre le chemin avide (0/60), et foncer sur le boss en ignorant les intentions reste à 60/60 — la proposition punit les mauvais joueurs. Chiffres livrés conservés pour garantir l'exigence de gainabilité de la mission. Documenté dans DELIVERY.md."
+  },
+  "localPlay": {
+    "how": "Navigateur IAB sur http://127.0.0.1:8813 (port libre après collision avec les serveurs d'autres sessions ; le routage de clics IAB vers les boutons étant capricieux, clics DOM via les délégués du jeu — méthode documentée des sessions précédentes).",
+    "run1": "FR, chemin mi-avide : cuisine (malle), archiviste (billet), enfant aidé (lanterne), chat (tarte→clé), inspecteur, sommeil, finale 2 phases → FIN « Le feu est à toi » (7/7 portes, 5 combats, ligne d'éilogue enfant présente, 117 dégâts).",
+    "run2": "FR, chemin tranquille : cuisinière, archiviste, enfant regardé, chat refusé, sommeil → FIN « L'aube » survécue à 7 PV, éilogue sans la ligne enfant (variance vérifiée).",
+    "extras": "Mémoire des 2 fins allumée sur l'écran-titre (2 étoiles « got ») ; bascule ES/EN vérifiée ; mobile 390×740 rendu ; audit computed-styles (fond velours radial, boutons or #f0c96b→#d9a441, Georgia, bordures #4d3570) ; bug réel trouvé et corrigé en jouant (pageIdx manquant dans la vue story → « undefined ») + cosmétique (« Wagon 8 » sur la locomotive).",
+    "screenshots": "evidence/train-sept-portes/01–12 (titre, combat, branche, lanternes, chat, finale, choix final, 2 fins, mobile, couverture, lecteur public)."
+  },
+  "delivery": {
+    "repo": "codex-lm/train-sept-portes",
+    "repoUrl": "https://github.com/codex-lm/train-sept-portes",
+    "playUrl": "https://codex-lm.github.io/train-sept-portes/",
+    "commits": [
+      "90f839a v1.0.0 (jeu + docs + manifestes + couverture)",
+      "7563640 preuve ownership bd_s_75991779"
+    ],
+    "package": "8 entrées, 123 Kio — index.html, README.md, LICENSE (MIT), LOB7-GAME.json, LOB7-ATTRIBUTION.json, cover.png (PIL, 1280×720), DELIVERY.md, MISSION.json"
+  },
+  "lob7": {
+    "whoami": "OK avant publication (Z Code, usr_ns4cywae ; validations 0/2, imports 0/10, uploads 0/5)",
+    "checkLocal": "PASSED static-web-v1 (8 entrées, 123,0 Kio)",
+    "draftId": "bd_s_75991779-2443-4d61-9f74-6f737e9fae44",
+    "ownership": ".lob7/ownership/bd_s_75991779….txt = bd29390a… commité (7563640) et poussé sur main",
+    "prepare": "READY — commit figé 7563640968569787b9bfcf936195ad36acc6fc39",
+    "publish": "PUBLIÉ 2026-11-01 ~00:30 CET",
+    "gameId": "bg_s_367ceff0-e414-4c3b-9dda-4597a4b915f3",
+    "releaseId": "br_s_550c84d7-ad25-4b73-a557-4fbf45e97ac4",
+    "version": "1.0.0",
+    "urls": {
+      "fiche": "https://lob7.com/games/bg_s_367ceff0-e414-4c3b-9dda-4597a4b915f3?release=br_s_550c84d7-ad25-4b73-a557-4fbf45e97ac4",
+      "lecteur": "https://lob7.com/player/br_s_550c84d7-ad25-4b73-a557-4fbf45e97ac4"
+    },
+    "ficheVerifiee": "browser release + page publique : titre, description, genres Adventure·RPG·Train·Fairy tale·Turn-based combat, commandes, couverture auteur, « First published by Z Code », v1.0.0 11/1/2026, lien GitHub au commit figé, crédits Cédric/Z Code/Kimi complets.",
+    "readerVerified": "Lecteur public ouvert : iframe charge l'écran-titre complet du jeu servi (JS exécuté — langues/fins/crédit générés par le script UI). Clics IAB vers l'iframe d'origine isolée (r-8a448e2f….play.lob7.com) non routables (limite connue du panneau) et ticket de lancement à usage unique : partie complète dans le lecteur non rejouable depuis cet environnement. PREUVE D'ÉQUIVALENCE : index.html servi récupéré via improve sources — sha256 fb40ec05… IDENTIQUE octet/octet au fichier local joué jusqu'aux 2 fins ; contrôles runtime isolés de la préparation LOB7 « passed » sur ce snapshot exact.",
+    "quotasAfter": "validations 0/2, imports 0/10, uploads 0/5 (vérifiés après publication)"
+  },
+  "progress": [
+    { "at": "2026-10-31T23:23+01:00", "step": "verrou + journal + MISSION.json initial ; whoami OK ; tâches planifiées vérifiées intactes" },
+    { "at": "2026-10-31T23:5x+01:00", "step": "index.html complet (moteur pur + UI DOM/SVG + i18n EN/FR/ES) ; tests 16/16 ; équilibrage 3 profils × 60 graines" },
+    { "at": "2026-11-01T00:0x+01:00", "step": "2 parties complètes en navigateur local (2 fins), i18n, mobile, 10 captures ; bug pageIdx corrigé ; consult Kimi testée et écartée sur données" },
+    { "at": "2026-11-01T00:2x+01:00", "step": "couverture PIL, README/LICENSE/manifestes/DELIVERY ; dépôt GitHub public + Pages" },
+    { "at": "2026-11-01T00:3x+01:00", "step": "check-local PASSED → brouillon bd_s_75991779 → preuve ownership → prepare READY → PUBLICATION br_s_550c84d7 ; lecteur public vérifié (écran-titre servi + équivalence sha256) ; fiche vérifiée" }
+  ],
+  "proofs": {
+    "screenshotsDir": "C:/dev/zcode-games/evidence/train-sept-portes/",
+    "testCommand": "cd C:/dev/zcode-games/games/train-sept-portes-dev && node --test tests/train.test.mjs",
+    "balanceCommand": "node sim-verify-full.mjs 60",
+    "servedIndexSha256": "fb40ec05bc011fae579146746a2fd2507a93ac184b11ecc6b7b911f86f973404",
+    "limitations": "Équilibrage validé sur bots + 2 parties humaines, pas sur échantillon humain large ; le boss final peut être fondu par un build max-DPS avant sa Vapeur (stratégie de vitesse délibérée) ; audio non passé en écoute critique formelle ; partie complète DANS l'iframe du lecteur non rejouable depuis le panneau IAB (voir readerVerified)."
+  }
 }
